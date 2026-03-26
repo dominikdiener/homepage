@@ -28,6 +28,23 @@ document.querySelectorAll('.nav-links a').forEach(link => {
   }
 });
 
+// ===== HOW-STEP ACCORDION =====
+function toggleStep(el) {
+  const detail = el.querySelector('.how-step-detail');
+  if (el.classList.contains('active')) {
+    detail.style.maxHeight = null;
+    el.classList.remove('active');
+  } else {
+    // close other open steps
+    el.parentElement.querySelectorAll('.how-step.active').forEach(s => {
+      s.querySelector('.how-step-detail').style.maxHeight = null;
+      s.classList.remove('active');
+    });
+    el.classList.add('active');
+    detail.style.maxHeight = detail.scrollHeight + 'px';
+  }
+}
+
 // ===== CONTACT FORM =====
 const form = document.getElementById('contact-form');
 if (form) {

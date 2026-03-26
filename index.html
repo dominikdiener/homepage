@@ -114,8 +114,8 @@
   }
 
   .how-steps {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
+    flex-direction: column;
     gap: 2px;
     background: rgba(255,255,255,0.05);
     border-radius: 20px;
@@ -169,6 +169,90 @@
     font-size: 14px;
     color: var(--grey);
     line-height: 1.65;
+  }
+
+  /* Accordion */
+  .how-step {
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .how-step-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .how-step-header-left {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .how-step-toggle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--orange-dim);
+    border: 1px solid rgba(255,107,26,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.35s ease, background 0.3s;
+  }
+
+  .how-step-toggle svg {
+    width: 16px;
+    height: 16px;
+    stroke: var(--orange);
+    stroke-width: 2;
+    fill: none;
+  }
+
+  .how-step.active .how-step-toggle {
+    transform: rotate(180deg);
+    background: rgba(255,107,26,0.2);
+  }
+
+  .how-step-detail {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.45s ease, opacity 0.35s ease;
+    opacity: 0;
+  }
+
+  .how-step.active .how-step-detail {
+    opacity: 1;
+  }
+
+  .how-step-detail-inner {
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    margin-top: 20px;
+  }
+
+  .how-step-detail-text {
+    font-size: 14px;
+    color: var(--grey);
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+
+  .how-step-images {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .how-step-images img {
+    width: 100%;
+    max-width: 320px;
+    border-radius: 12px;
+    object-fit: cover;
+    aspect-ratio: 4/3;
+    background: var(--mid2);
+    border: 1px solid rgba(255,255,255,0.06);
   }
 
   /* ===== VALUE GRID ===== */
@@ -485,23 +569,65 @@
     <p class="section-sub" style="max-width:340px">Vom Einbau bis zur rechtssicheren Freigabe – alles digital nachvollziehbar.</p>
   </div>
   <div class="how-steps reveal">
-    <div class="how-step">
+    <div class="how-step" onclick="toggleStep(this)">
       <div class="how-step-num">01</div>
-      <div class="how-step-tag">Einbau</div>
-      <h3>Sensor wird eingebaut</h3>
-      <p>Der 50×50×120 mm Sensor wird beim Estricheinbau direkt eingesetzt. Er steht zunächst ~60 mm über – und beginnt sofort mit der kontinuierlichen Feuchtemessung.</p>
+      <div class="how-step-header">
+        <div class="how-step-header-left">
+          <div class="how-step-tag">Einbau</div>
+          <h3>Sensor wird eingebaut</h3>
+          <p>Der 50×50×120 mm Sensor wird beim Estricheinbau direkt eingesetzt. Er steht zunächst ~60 mm über – und beginnt sofort mit der kontinuierlichen Feuchtemessung.</p>
+        </div>
+        <div class="how-step-toggle"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+      <div class="how-step-detail">
+        <div class="how-step-detail-inner">
+          <p class="how-step-detail-text">Der Sensor wird während des Estricheinbaus direkt in die frische Masse eingesetzt – ohne zusätzlichen Arbeitsschritt. Die kompakte Bauform (50×50×120 mm) passt in jeden gängigen Estrichaufbau. Ab dem Moment der Platzierung beginnt die lückenlose, automatische Aufzeichnung der Restfeuchte. So entsteht von Anfang an eine vollständige Dokumentation – ganz ohne manuelles Zutun.</p>
+          <div class="how-step-images">
+            <img src="assets/images/step-01a.svg" alt="Sensor wird in frischen Estrich eingesetzt">
+            <img src="assets/images/step-01b.svg" alt="Eingebauter Sensor im Estrich">
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="how-step">
+    <div class="how-step" onclick="toggleStep(this)">
       <div class="how-step-num">02</div>
-      <div class="how-step-tag">Kürzen</div>
-      <h3>Überstand abschneiden</h3>
-      <p>Nach dem Abbinden wird der überstehende Teil bündig mit dem Estrich abgeschnitten. Der Schutzdeckel wird aufgesetzt – keine Stolperkante, optisch unauffällig.</p>
+      <div class="how-step-header">
+        <div class="how-step-header-left">
+          <div class="how-step-tag">Kürzen</div>
+          <h3>Überstand abschneiden</h3>
+          <p>Nach dem Abbinden wird der überstehende Teil bündig mit dem Estrich abgeschnitten. Der Schutzdeckel wird aufgesetzt – keine Stolperkante, optisch unauffällig.</p>
+        </div>
+        <div class="how-step-toggle"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+      <div class="how-step-detail">
+        <div class="how-step-detail-inner">
+          <p class="how-step-detail-text">Sobald der Estrich ausgehärtet ist, wird der überstehende Teil des Sensors mit einer handelsüblichen Säge bündig abgeschnitten. Anschließend wird der mitgelieferte Schutzdeckel aufgesetzt. Das Ergebnis: eine ebene, stolperfreie Oberfläche, die optisch kaum auffällt. Der Sensor misst währenddessen im Inneren zuverlässig weiter.</p>
+          <div class="how-step-images">
+            <img src="assets/images/step-02a.svg" alt="Überstand wird bündig abgeschnitten">
+            <img src="assets/images/step-02b.svg" alt="Schutzdeckel auf dem Sensor">
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="how-step">
+    <div class="how-step" onclick="toggleStep(this)">
       <div class="how-step-num">03</div>
-      <div class="how-step-tag">Auslesen</div>
-      <h3>Daten abrufen & Freigabe</h3>
-      <p>Deckel ab, Sendeeinheit herausziehen – alle Messdaten sind lückenlos gespeichert. Der Freigabenachweis ist auf Knopfdruck verfügbar.</p>
+      <div class="how-step-header">
+        <div class="how-step-header-left">
+          <div class="how-step-tag">Auslesen</div>
+          <h3>Daten abrufen & Freigabe</h3>
+          <p>Deckel ab, Sendeeinheit herausziehen – alle Messdaten sind lückenlos gespeichert. Der Freigabenachweis ist auf Knopfdruck verfügbar.</p>
+        </div>
+        <div class="how-step-toggle"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </div>
+      <div class="how-step-detail">
+        <div class="how-step-detail-inner">
+          <p class="how-step-detail-text">Zum Auslesen wird einfach der Schutzdeckel entfernt und die Sendeeinheit herausgezogen. Sämtliche Messwerte sind lückenlos im Sensor gespeichert und werden per App oder Auslesestation übertragen. Der rechtssichere Freigabenachweis – inklusive Temperatur- und Feuchteverlauf – steht sofort als PDF zur Verfügung. Kein Nachrechnen, kein Interpretationsspielraum.</p>
+          <div class="how-step-images">
+            <img src="assets/images/step-03a.svg" alt="Sendeeinheit wird herausgezogen">
+            <img src="assets/images/step-03b.svg" alt="Freigabenachweis auf dem Display">
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
