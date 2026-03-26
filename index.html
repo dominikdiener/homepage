@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Estrich Digital – Der digitale Nachweis für trockenen Estrich. IoT-Feuchtemessung direkt im Estrich, manipulationssicher und rechtssicher dokumentiert.">
+<title>Estrich Digital – Der digitale Nachweis für trockenen Estrich</title>
+<link rel="stylesheet" href="assets/css/main.css">
+<style>
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 120px 64px 80px;
+    position: relative;
+    overflow: hidden;
+    gap: 48px;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(255,107,26,0.07) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -100px; left: 30%;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(26,122,110,0.06) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--orange-dim);
+    border: 1px solid rgba(255,107,26,0.3);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--orange);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.1s forwards;
+  }
+
+  .hero-badge-dot {
+    width: 6px; height: 6px;
+    background: var(--orange);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  .hero-h1 {
+    font-size: clamp(36px, 4.5vw, 60px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.25s forwards;
+  }
+
+  .hero-h1 em { font-style: normal; color: var(--orange); }
+
+  .hero-sub {
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: var(--grey);
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.4s forwards;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.55s forwards;
+  }
+
+  .hero-visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    animation: fadeIn 1s 0.6s forwards;
+  }
+
+  /* ===== HOW IT WORKS ===== */
+  .how { padding: 96px 64px; background: rgba(0,0,0,0.15); }
+
+  .how-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 56px;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .how-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  .how-step {
+    background: var(--mid);
+    padding: 40px 36px;
+    position: relative;
+    transition: background 0.3s;
+  }
+
+  .how-step:hover { background: var(--mid2); }
+
+  .how-step-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 64px;
+    font-weight: 700;
+    color: rgba(255,107,26,0.07);
+    position: absolute;
+    top: 12px; right: 20px;
+    line-height: 1;
+    user-select: none;
+  }
+
+  .how-step-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--orange-dim);
+    border: 1px solid rgba(255,107,26,0.25);
+    border-radius: 16px;
+    padding: 3px 12px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--orange);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+
+  .how-step h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .how-step p {
+    font-size: 14px;
+    color: var(--grey);
+    line-height: 1.65;
+  }
+
+  /* ===== VALUE GRID ===== */
+  .value-section { padding: 96px 64px; }
+
+  .value-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+    margin-top: 56px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  .value-card {
+    background: var(--mid);
+    padding: 48px;
+    transition: background 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .value-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--orange);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .value-card:hover { background: var(--mid2); }
+  .value-card:hover::before { opacity: 1; }
+
+  .value-icon {
+    width: 46px; height: 46px;
+    background: var(--orange-dim);
+    border: 1px solid rgba(255,107,26,0.25);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 22px;
+  }
+
+  .value-card h3 {
+    font-size: 19px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .value-card p {
+    font-size: 14px;
+    color: var(--grey);
+    line-height: 1.7;
+  }
+
+  /* ===== AUDIENCES ===== */
+  .audiences-section { padding: 96px 64px; background: rgba(0,0,0,0.15); }
+
+  .audience-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 56px;
+  }
+
+  .audience-card {
+    background: var(--mid);
+    border-radius: 20px;
+    padding: 48px;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: border-color 0.3s, transform 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .audience-card::after {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    opacity: 0.06;
+    transition: opacity 0.3s;
+  }
+
+  .audience-card.gu::after  { background: var(--orange); }
+  .audience-card.her::after { background: var(--teal); }
+
+  .audience-card:hover { border-color: rgba(255,255,255,0.12); transform: translateY(-4px); }
+  .audience-card:hover::after { opacity: 0.12; }
+
+  .audience-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    font-weight: 700;
+  }
+
+  .audience-card.gu  .audience-label { color: var(--orange); }
+  .audience-card.her .audience-label { color: var(--teal); }
+
+  .audience-card h3 { font-size: 24px; font-weight: 700; margin-bottom: 14px; line-height: 1.25; }
+  .audience-card p  { font-size: 15px; color: var(--grey); line-height: 1.7; margin-bottom: 28px; }
+
+  .benefits { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+
+  .benefits li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--light);
+    opacity: 0.85;
+  }
+
+  .benefits li span.check {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .audience-card.gu  .check { color: var(--orange); }
+  .audience-card.her .check { color: var(--teal); }
+
+  /* ===== SPECS ===== */
+  .specs-section { padding: 96px 64px; }
+
+  .specs-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 56px;
+  }
+
+  .spec-item {
+    background: var(--mid);
+    padding: 36px 28px;
+    text-align: center;
+    transition: background 0.3s;
+  }
+
+  .spec-item:hover { background: var(--mid2); }
+
+  .spec-value {
+    font-family: 'Space Mono', monospace;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--orange);
+    margin-bottom: 6px;
+  }
+
+  .spec-label { font-size: 13px; color: var(--grey); line-height: 1.4; }
+
+  /* ===== CHART ===== */
+  .chart-wrap-outer { padding: 0 64px 96px; }
+
+  .chart-section-inner {
+    background: var(--mid);
+    border-radius: 24px;
+    padding: 60px;
+  }
+
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 36px;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .chart-legend { display: flex; gap: 20px; flex-wrap: wrap; }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--grey);
+  }
+
+  .legend-dot  { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .legend-dash { width: 16px; height: 2px; flex-shrink: 0; border-top: 2px dashed; }
+
+  .chart-bg { background: rgba(0,0,0,0.3); border-radius: 14px; padding: 24px 20px 12px; }
+
+  /* ===== CTA ===== */
+  .cta-section {
+    padding: 96px 64px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px; height: 400px;
+    background: radial-gradient(ellipse, rgba(255,107,26,0.07) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .cta-section .section-sub { margin: 0 auto 40px; }
+
+  .cta-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="assets/images/logo.png" alt="Estrich Digital Logo"/>
+    <span class="nav-wordmark">ESTRICH DIGITAL</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#how">So funktioniert's</a></li>
+    <li><a href="#value">Ihr Nutzen</a></li>
+    <li><a href="#technik">Technik</a></li>
+    <li><a href="pages/kontakt.html" class="nav-cta">Kontakt aufnehmen</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      Patentierte IoT-Technologie
+    </div>
+    <h1 class="hero-h1">Der digitale Nachweis<br>für <em>trockenen Estrich</em></h1>
+    <p class="hero-sub">Kontinuierliche Feuchtemessung direkt im Estrich – manipulationssicher, rechtssicher dokumentiert. Damit Termine eingehalten und Trocknungserfolge bewiesen werden.</p>
+    <div class="hero-actions">
+      <a href="#how" class="btn-primary">Wie es funktioniert</a>
+      <a href="pages/kontakt.html" class="btn-secondary">Demo anfragen →</a>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div style="width:360px; height:460px;" class="float">
+      <svg viewBox="0 0 380 480" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+        <rect x="30" y="300" width="320" height="160" rx="12" fill="#4A4540"/>
+        <line x1="30" y1="320" x2="350" y2="320" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+        <line x1="30" y1="350" x2="350" y2="350" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+        <line x1="30" y1="380" x2="350" y2="380" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+        <line x1="30" y1="300" x2="350" y2="300" stroke="rgba(255,209,102,0.25)" stroke-width="1.5" stroke-dasharray="8,6"/>
+        <rect x="167" y="300" width="46" height="130" rx="3" fill="#E05800"/>
+        <rect x="177" y="300" width="26" height="130" rx="2" fill="#1A6060"/>
+        <rect x="167" y="130" width="46" height="170" rx="3" fill="#FF6B1A"/>
+        <rect x="177" y="130" width="26" height="170" rx="2" fill="#1A8070"/>
+        <ellipse cx="190" cy="132" rx="52" ry="7" fill="#1C5050"/>
+        <path d="M 138,132 Q 190,98 242,132 Z" fill="#E05800"/>
+        <ellipse cx="190" cy="132" rx="52" ry="7" fill="#FF6B1A" opacity="0.7"/>
+        <line x1="120" y1="348" x2="165" y2="348" stroke="rgba(255,209,102,0.5)" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <circle cx="118" cy="348" r="4" fill="#FFD166" opacity="0.8"/>
+        <text x="68" y="352" fill="#FFD166" font-family="Space Mono,monospace" font-size="10" opacity="0.7">Messfl. 1</text>
+        <line x1="120" y1="388" x2="165" y2="388" stroke="rgba(255,209,102,0.5)" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <circle cx="118" cy="388" r="4" fill="#FFD166" opacity="0.8"/>
+        <text x="68" y="392" fill="#FFD166" font-family="Space Mono,monospace" font-size="10" opacity="0.7">Messfl. 2</text>
+        <line x1="215" y1="348" x2="258" y2="348" stroke="rgba(255,209,102,0.5)" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <circle cx="260" cy="348" r="4" fill="#FFD166" opacity="0.8"/>
+        <text x="266" y="352" fill="#FFD166" font-family="Space Mono,monospace" font-size="10" opacity="0.7">Messfl. 3</text>
+        <line x1="215" y1="388" x2="258" y2="388" stroke="rgba(255,209,102,0.5)" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <circle cx="260" cy="388" r="4" fill="#FFD166" opacity="0.8"/>
+        <text x="266" y="392" fill="#FFD166" font-family="Space Mono,monospace" font-size="10" opacity="0.7">Messfl. 4</text>
+        <line x1="250" y1="130" x2="250" y2="300" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="246" y1="130" x2="254" y2="130" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+        <line x1="246" y1="300" x2="254" y2="300" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+        <text x="258" y="217" fill="rgba(255,255,255,0.45)" font-family="Space Mono,monospace" font-size="10">~60 mm</text>
+        <text x="258" y="231" fill="rgba(255,255,255,0.45)" font-family="Space Mono,monospace" font-size="10">über OK</text>
+        <ellipse cx="190" cy="112" rx="36" ry="8" stroke="#FF6B1A" stroke-width="1.5" fill="none" opacity="0.5"/>
+        <ellipse cx="190" cy="90"  rx="54" ry="12" stroke="#FF6B1A" stroke-width="1.2" fill="none" opacity="0.3"/>
+        <ellipse cx="190" cy="65"  rx="72" ry="16" stroke="#FF6B1A" stroke-width="1"   fill="none" opacity="0.15"/>
+        <rect x="290" y="58" width="68" height="24" rx="6" fill="rgba(26,122,110,0.22)" stroke="#1A7A6E" stroke-width="1"/>
+        <text x="304" y="75" fill="#1A7A6E" font-family="Space Mono,monospace" font-size="9" font-weight="700">LTE-M</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <span class="trust-label">Technologie</span>
+  <div class="trust-items">
+    <span class="trust-item">✓&nbsp; Patentiert</span>
+    <span class="trust-item">✓&nbsp; 4 kapazitive Messflächen</span>
+    <span class="trust-item">✓&nbsp; LTE-M IoT</span>
+    <span class="trust-item">✓&nbsp; 50×50×120 mm</span>
+    <span class="trust-item">✓&nbsp; 24/7 Messung</span>
+    <span class="trust-item">✓&nbsp; Entwickelt seit 2019</span>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="how-header reveal">
+    <div>
+      <div class="section-eyebrow">So funktioniert's</div>
+      <h2 class="section-title">Drei Schritte.<br>Lückenlose Dokumentation.</h2>
+    </div>
+    <p class="section-sub" style="max-width:340px">Vom Einbau bis zur rechtssicheren Freigabe – alles digital nachvollziehbar.</p>
+  </div>
+  <div class="how-steps reveal">
+    <div class="how-step">
+      <div class="how-step-num">01</div>
+      <div class="how-step-tag">Einbau</div>
+      <h3>Sensor wird eingebaut</h3>
+      <p>Der 50×50×120 mm Sensor wird beim Estricheinbau direkt eingesetzt. Er steht zunächst ~60 mm über – und beginnt sofort mit der kontinuierlichen Feuchtemessung.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">02</div>
+      <div class="how-step-tag">Kürzen</div>
+      <h3>Überstand abschneiden</h3>
+      <p>Nach dem Abbinden wird der überstehende Teil bündig mit dem Estrich abgeschnitten. Der Schutzdeckel wird aufgesetzt – keine Stolperkante, optisch unauffällig.</p>
+    </div>
+    <div class="how-step">
+      <div class="how-step-num">03</div>
+      <div class="how-step-tag">Auslesen</div>
+      <h3>Daten abrufen & Freigabe</h3>
+      <p>Deckel ab, Sendeeinheit herausziehen – alle Messdaten sind lückenlos gespeichert. Der Freigabenachweis ist auf Knopfdruck verfügbar.</p>
+    </div>
+  </div>
+</section>
+
+<!-- VALUE -->
+<section class="value-section" id="value">
+  <div class="reveal">
+    <div class="section-eyebrow">Ihr Nutzen</div>
+    <h2 class="section-title">Weniger Haftung.<br>Mehr Vertrauen.</h2>
+  </div>
+  <div class="value-grid reveal">
+    <div class="value-card">
+      <div class="value-icon">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 2L3 6v5c0 4.4 3.3 8.5 8 9.5 4.7-1 8-5.1 8-9.5V6l-8-4z" stroke="#FF6B1A" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </div>
+      <h3>Rechtssichere Freigabenachweise</h3>
+      <p>Manipulationssichere Messdaten direkt aus dem Estrich – kein CM-Gerät, keine Stichproben. Lückenlos, objektiv, jederzeit reproduzierbar.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-icon">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="9" stroke="#FF6B1A" stroke-width="1.8"/><path d="M11 6v5l3 3" stroke="#FF6B1A" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </div>
+      <h3>Schnellere Bauprozesse</h3>
+      <p>Früherkennung von Trocknungsfortschritten vermeidet unnötige Wartezeiten. Folgegewerke können präzise geplant und termingerecht beauftragt werden.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-icon">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 12l5 5L18 6" stroke="#FF6B1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h3>Produktwirksamkeit bewiesen</h3>
+      <p>Für Estrich-Hersteller ist der Sensor ein Marketinginstrument: Die Wirksamkeit von Trocknungsbeschleunigern lässt sich erstmals mit echten Kurven belegen.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-icon">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 11h4l3-7 4 14 3-7h4" stroke="#FF6B1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h3>Kontinuierliche Verlaufsdaten</h3>
+      <p>Feuchte und Temperatur an 4 Messpunkten – rund um die Uhr. Kein manueller Aufwand, keine Stichproben. Der Sensor arbeitet still und zuverlässig.</p>
+    </div>
+  </div>
+</section>
+
+<!-- AUDIENCES -->
+<section class="audiences-section">
+  <div class="reveal">
+    <div class="section-eyebrow">Zielgruppen</div>
+    <h2 class="section-title">Wer profitiert?</h2>
+  </div>
+  <div class="audience-grid reveal">
+    <div class="audience-card gu">
+      <div class="audience-label">Für Generalunternehmer</div>
+      <h3>Freigabe mit einem Klick – kein Haftungsrisiko</h3>
+      <p>Als GU tragen Sie die Verantwortung für termingerechte Übergaben. Mit Estrich Digital haben Sie den Trocknungsstatus jederzeit im Blick – und im Streitfall den Beweis.</p>
+      <ul class="benefits">
+        <li><span class="check">✓</span> Rechtssichere Freigabedokumentation</li>
+        <li><span class="check">✓</span> Frühwarnung bei Verzögerungen</li>
+        <li><span class="check">✓</span> Terminplanung auf Datenbasis</li>
+        <li><span class="check">✓</span> Weniger Rückfragen mit dem Estrichleger</li>
+      </ul>
+    </div>
+    <div class="audience-card her">
+      <div class="audience-label">Für Estrich-Hersteller</div>
+      <h3>Trocknungsleistung objektiv belegen</h3>
+      <p>Sie verkaufen Trocknungsbeschleuniger – aber bisher ohne Beweis. Mit Estrich Digital können Sie die Wirksamkeit Ihrer Produkte erstmals mit echten Daten dokumentieren.</p>
+      <ul class="benefits">
+        <li><span class="check">✓</span> Vor/nach-Vergleiche in Echtzeit</li>
+        <li><span class="check">✓</span> Vermarktungsmaterial mit echten Kurven</li>
+        <li><span class="check">✓</span> Differenzierung gegenüber Wettbewerb</li>
+        <li><span class="check">✓</span> Grundlage für Produktoptimierung</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- SPECS -->
+<section class="specs-section" id="technik" style="background:rgba(0,0,0,0.15);">
+  <div class="reveal">
+    <div class="section-eyebrow">Technische Daten</div>
+    <h2 class="section-title">Kompakt. Robust. Präzise.</h2>
+    <p class="section-sub">Entwickelt für den harten Baustelleneinsatz – und patentiert.</p>
+  </div>
+  <div class="specs-grid reveal">
+    <div class="spec-item"><div class="spec-value">50×50</div><div class="spec-label">Grundfläche in mm</div></div>
+    <div class="spec-item"><div class="spec-value">120 mm</div><div class="spec-label">Gesamthöhe (60 mm ober/unter OK)</div></div>
+    <div class="spec-item"><div class="spec-value">4</div><div class="spec-label">Kapazitive Messflächen</div></div>
+    <div class="spec-item"><div class="spec-value">LTE-M</div><div class="spec-label">IoT-Übertragungsprotokoll</div></div>
+    <div class="spec-item"><div class="spec-value">24/7</div><div class="spec-label">Kontinuierliche Messung</div></div>
+    <div class="spec-item"><div class="spec-value">±0,1</div><div class="spec-label">Messgenauigkeit CM-%</div></div>
+    <div class="spec-item"><div class="spec-value">2019</div><div class="spec-label">Entwicklungsbeginn</div></div>
+    <div class="spec-item"><div class="spec-value">DE</div><div class="spec-label">Patent angemeldet</div></div>
+  </div>
+</section>
+
+<!-- CHART -->
+<div class="chart-wrap-outer reveal">
+  <div class="chart-section-inner">
+    <div class="chart-header">
+      <div>
+        <div class="section-eyebrow">Verlaufsdaten · Beispiel</div>
+        <div style="font-size:18px;font-weight:700;">Feuchte & Temperatur über Zeit</div>
+      </div>
+      <div class="chart-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#FF6B1A"></div>CM-% Unten</div>
+        <div class="legend-item"><div class="legend-dash" style="border-color:#1A7A6E"></div>CM-% Oben</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#FFD166"></div>Temperatur °C</div>
+        <div class="legend-item"><div class="legend-dash" style="border-color:rgba(255,255,255,0.3)"></div>Freigabewert (2,0)</div>
+      </div>
+    </div>
+    <div class="chart-bg">
+      <svg viewBox="0 0 1060 160" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;">
+        <line x1="60" y1="10"  x2="1040" y2="10"  stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+        <line x1="60" y1="23"  x2="1040" y2="23"  stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+        <line x1="60" y1="61"  x2="1040" y2="61"  stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+        <line x1="60" y1="87"  x2="1040" y2="87"  stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+        <line x1="60" y1="112" x2="1040" y2="112" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+        <line x1="60" y1="138" x2="1040" y2="138" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+        <line x1="60" y1="112" x2="1040" y2="112" stroke="rgba(255,255,255,0.15)" stroke-width="1" stroke-dasharray="6,4"/>
+        <text x="4" y="116" fill="rgba(255,255,255,0.3)" font-family="Space Mono,monospace" font-size="9">2.0</text>
+        <text x="4" y="14"  fill="#8BA5AB" font-family="Space Mono,monospace" font-size="9">6.0</text>
+        <text x="4" y="27"  fill="#8BA5AB" font-family="Space Mono,monospace" font-size="9">5.5</text>
+        <text x="4" y="65"  fill="#8BA5AB" font-family="Space Mono,monospace" font-size="9">4.0</text>
+        <text x="4" y="91"  fill="#8BA5AB" font-family="Space Mono,monospace" font-size="9">3.0</text>
+        <text x="4" y="142" fill="#8BA5AB" font-family="Space Mono,monospace" font-size="9">1.0</text>
+        <polyline points="60,34 120,35 200,39 290,44 380,52 460,61 540,71 610,82 680,95 750,104 820,109 870,112 920,112 1020,112" stroke="#FF6B1A" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <polyline points="60,30 120,33 200,37 290,43 380,50 460,59 540,70 610,80 680,93 750,103 820,109 880,112 940,112 1020,112" stroke="#1A7A6E" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="8,3"/>
+        <polyline points="60,34 120,35 200,39 290,44 370,52 440,62 510,75 570,89 620,102 660,108 690,112 1020,112" stroke="#4A9EDB" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6,3" opacity="0.85"/>
+        <polyline points="60,86 90,82 120,79 150,80 180,77 210,75 240,79 270,77 300,73 330,75 360,71 390,73 420,70 450,71 480,68 510,70 540,66 570,68 600,63 630,66 660,68 690,70 720,66 750,68 780,70 810,66 840,68 870,70 900,71 930,68 960,70 990,71 1020,70" stroke="#FFD166" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/>
+        <defs>
+          <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#FF6B1A" stop-opacity="0.15"/>
+            <stop offset="100%" stop-color="#FF6B1A" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <polygon points="60,34 120,35 200,39 290,44 380,52 460,61 540,71 610,82 680,95 750,104 820,109 870,112 920,112 1020,112 1020,150 60,150" fill="url(#g1)"/>
+        <line x1="60" y1="20" x2="60" y2="34" stroke="#4A9EDB" stroke-width="1" stroke-dasharray="3,2" opacity="0.6"/>
+        <rect x="56" y="4" width="170" height="16" rx="4" fill="rgba(74,158,219,0.16)" stroke="#4A9EDB" stroke-width="1"/>
+        <text x="64" y="16" fill="#4A9EDB" font-family="Space Mono,monospace" font-size="8.5">+ Trocknungsbeschleuniger</text>
+        <circle cx="690" cy="112" r="4" fill="#4A9EDB"/>
+        <line x1="690" y1="20" x2="690" y2="108" stroke="#4A9EDB" stroke-width="1" stroke-dasharray="3,2" opacity="0.5"/>
+        <rect x="634" y="4" width="114" height="16" rx="4" fill="rgba(74,158,219,0.16)" stroke="#4A9EDB" stroke-width="1"/>
+        <text x="642" y="16" fill="#4A9EDB" font-family="Space Mono,monospace" font-size="8.5">✓ Tag 22  (−7 Tage)</text>
+        <circle cx="870" cy="112" r="5" fill="#1A7A6E"/>
+        <line x1="870" y1="20" x2="870" y2="107" stroke="#1A7A6E" stroke-width="1" stroke-dasharray="3,2" opacity="0.5"/>
+        <rect x="806" y="4" width="132" height="16" rx="4" fill="rgba(26,122,110,0.22)" stroke="#1A7A6E" stroke-width="1"/>
+        <text x="814" y="16" fill="#1A7A6E" font-family="Space Mono,monospace" font-size="8.5">✓ Freigabe erreicht</text>
+        <text x="56"  y="156" fill="#8BA5AB" font-family="Space Mono,monospace" font-size="8">Tag 0</text>
+        <text x="196" y="156" fill="#8BA5AB" font-family="Space Mono,monospace" font-size="8">Tag 5</text>
+        <text x="336" y="156" fill="#8BA5AB" font-family="Space Mono,monospace" font-size="8">Tag 10</text>
+        <text x="476" y="156" fill="#8BA5AB" font-family="Space Mono,monospace" font-size="8">Tag 15</text>
+        <text x="616" y="156" fill="#8BA5AB" font-family="Space Mono,monospace" font-size="8">Tag 20</text>
+        <text x="756" y="156" fill="#8BA5AB" font-family="Space Mono,monospace" font-size="8">Tag 25</text>
+        <text x="896" y="156" fill="#8BA5AB" font-family="Space Mono,monospace" font-size="8">Tag 30</text>
+        <text x="1000" y="156" fill="#8BA5AB" font-family="Space Mono,monospace" font-size="8">Tag 34</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="section-eyebrow reveal">Jetzt starten</div>
+  <h2 class="section-title reveal">Bereit für den digitalen<br>Trocknungsnachweis?</h2>
+  <p class="section-sub reveal">Sprechen Sie mit uns über Pilotprojekte, Systemintegration oder eine Demo vor Ort.</p>
+  <div class="cta-actions reveal">
+    <a href="pages/kontakt.html" class="btn-primary">Kontakt aufnehmen</a>
+    <a href="#how" class="btn-secondary">Nochmal durchlesen</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    <div class="footer-wordmark">ESTRICH DIGITAL</div>
+    <div class="footer-meta">Estrich Digital GmbH · Erlenbach · © 2025 · Alle Rechte vorbehalten</div>
+  </div>
+  <div class="footer-right">
+    <a href="pages/impressum.html">Impressum</a>
+    <a href="pages/datenschutz.html">Datenschutz</a>
+    <a href="pages/kontakt.html">Kontakt</a>
+  </div>
+</footer>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

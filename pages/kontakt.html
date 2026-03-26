@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Kontakt – Estrich Digital. Sprechen Sie mit uns über Pilotprojekte, Demos oder Systemintegration.">
+<title>Kontakt – Estrich Digital</title>
+<link rel="stylesheet" href="../assets/css/main.css">
+</head>
+<body>
+
+<nav>
+  <a href="../index.html" class="nav-logo">
+    <img src="../assets/images/logo.png" alt="Estrich Digital Logo"/>
+    <span class="nav-wordmark">ESTRICH DIGITAL</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="../index.html#how">So funktioniert's</a></li>
+    <li><a href="../index.html#value">Ihr Nutzen</a></li>
+    <li><a href="../index.html#technik">Technik</a></li>
+    <li><a href="kontakt.html" class="nav-cta">Kontakt aufnehmen</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-content">
+    <div class="section-eyebrow">Kontakt</div>
+    <h1 class="section-title" style="font-size: clamp(32px,4vw,52px);">Sprechen Sie mit uns.</h1>
+    <p class="section-sub">Ob Pilotprojekt, Demo vor Ort oder Fragen zur Systemintegration – wir antworten schnell und unkompliziert.</p>
+  </div>
+</div>
+
+<div class="contact-grid">
+  <!-- LEFT: Info -->
+  <div class="contact-info">
+    <h3>Estrich Digital</h3>
+    <p>Wir helfen Generalunternehmern und Estrich-Herstellern, ihren Trocknungsprozess digital zu dokumentieren – manipulationssicher und rechtssicher.</p>
+
+    <div class="contact-detail">
+      <div class="contact-detail-icon">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2C6.24 2 4 4.24 4 7c0 4.25 5 9 5 9s5-4.75 5-9c0-2.76-2.24-5-5-5zm0 6.5A1.5 1.5 0 1 1 9 5a1.5 1.5 0 0 1 0 3.5z" fill="#FF6B1A"/></svg>
+      </div>
+      <div class="contact-detail-text">
+        <strong>Adresse</strong>
+        <span>Estrich Digital<br>Königsberger Str. 6<br>57334 Bad Laasphe</span>
+      </div>
+    </div>
+
+    <div class="contact-detail">
+      <div class="contact-detail-icon">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 3h12a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm6 6L4 6h10L9 9z" fill="#FF6B1A"/></svg>
+      </div>
+      <div class="contact-detail-text">
+        <strong>E-Mail</strong>
+        <span><a href="mailto:info@estrich-digital.de" style="color:var(--orange)">info@estrich-digital.de</a></span>
+      </div>
+    </div>
+
+    <div class="contact-detail">
+      <div class="contact-detail-icon">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.6 2h3l1.5 3.75-1.8 1.05C7.2 8.7 9.3 10.8 11.2 11.7L12.25 9.9 16 11.4v3c0 .55-.45 1-1 1C7.3 15.4 2.6 10.7 2.6 5 2.6 4.45 3.05 4 3.6 4v-2z" fill="#FF6B1A"/></svg>
+      </div>
+      <div class="contact-detail-text">
+        <strong>Telefon</strong>
+        <span><a href="tel:+49000000000" style="color:var(--orange)">+49 (0) 2752/5099699</a></span>
+      </div>
+    </div>
+
+    <div style="margin-top: 40px; padding: 24px; background: var(--teal-dim); border: 1px solid rgba(26,122,110,0.3); border-radius: 14px;">
+      <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:1.5px; color:var(--teal); text-transform:uppercase; margin-bottom:10px;">Schnelle Antwort</div>
+      <p style="font-size:14px; color:var(--grey); line-height:1.65;">Wir antworten in der Regel innerhalb von 1 Werktag.</p>
+    </div>
+  </div>
+
+  <!-- RIGHT: Form -->
+  <div class="form-card">
+    <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:2px; color:var(--orange); text-transform:uppercase; margin-bottom:28px;">Anfrage senden</div>
+
+    <form id="contact-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="vorname">Vorname</label>
+          <input type="text" id="vorname" name="vorname" placeholder="Max" required>
+        </div>
+        <div class="form-group">
+          <label for="nachname">Nachname</label>
+          <input type="text" id="nachname" name="nachname" placeholder="Mustermann" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="firma">Unternehmen</label>
+        <input type="text" id="firma" name="firma" placeholder="Muster">
+      </div>
+
+      <div class="form-group">
+        <label for="email">E-Mail-Adresse *</label>
+        <input type="email" id="email" name="email" placeholder="max@muster.de" required>
+      </div>
+
+      <div class="form-group">
+        <label for="rolle">Ich bin …</label>
+        <select id="rolle" name="rolle">
+          <option value="">Bitte auswählen</option>
+          <option value="gu">Generalunternehmer / Bauträger</option>
+          <option value="hersteller">Estrich-Hersteller / Baustoffhandel</option>
+          <option value="estrichleger">Estrichleger / Handwerker</option>
+          <option value="planer">Architekt / Planer</option>
+          <option value="sonstiges">Sonstiges</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="betreff">Betreff</label>
+        <input type="text" id="betreff" name="betreff" placeholder="z.B. Pilotprojekt, Demo, Partnerschaft …">
+      </div>
+
+      <div class="form-group">
+        <label for="nachricht">Ihre Nachricht *</label>
+        <textarea id="nachricht" name="nachricht" placeholder="Beschreiben Sie kurz Ihr Anliegen oder Ihren Anwendungsfall …" required></textarea>
+      </div>
+
+      <button type="submit" class="btn-primary form-submit">Anfrage senden</button>
+      <p class="form-note">* Pflichtfelder. Ihre Daten werden ausschließlich zur Beantwortung Ihrer Anfrage verwendet. Weitere Informationen finden Sie in unserer <a href="datenschutz.html">Datenschutzerklärung</a>.</p>
+      <div class="success-msg" id="success-msg">✓ Vielen Dank! Ihre Anfrage wurde gesendet. Wir melden uns in Kürze.</div>
+    </form>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-left">
+    <div class="footer-wordmark">ESTRICH DIGITAL</div>
+    <div class="footer-meta">Estrich Digital · Bad Laasphe · 2026 · Alle Rechte vorbehalten</div>
+  </div>
+  <div class="footer-right">
+    <a href="impressum.html">Impressum</a>
+    <a href="datenschutz.html">Datenschutz</a>
+    <a href="kontakt.html">Kontakt</a>
+  </div>
+</footer>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
