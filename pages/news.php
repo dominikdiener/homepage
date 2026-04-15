@@ -57,13 +57,10 @@ $categoryLabels = [
 }
 
 .news-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    display: flex;
+    flex-direction: column;
     gap: 1.8rem;
-}
-
-.news-card {
-    max-width: 600px;
+    max-width: 860px;
 }
 
 .news-card {
