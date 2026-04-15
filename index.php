@@ -1,5 +1,6 @@
+<?php require_once __DIR__ . '/includes/content.php'; $lang = getCurrentLang(); $ui = loadUI($lang); ?>
 <!DOCTYPE html>
-<html lang="de">
+<html lang="<?= e($lang) ?>">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
 <meta name="description" content="Estrich Digital – Der digitale Nachweis für trockenen Estrich. IoT-Feuchtemessung direkt im Estrich, manipulationssicher und rechtssicher dokumentiert.">
 <title>Estrich Digital – Der digitale Nachweis für trockenen Estrich</title>
 <link rel="stylesheet" href="assets/css/main.css">
+<?= renderCustomCSS($lang) ?>
 <style>
   /* ===== HERO ===== */
   .hero {
@@ -167,7 +169,7 @@
   }
 
   .how-step p {
-    font-size: 14px;
+    font-size: 15px;
     color: var(--grey);
     line-height: 1.65;
   }
@@ -353,7 +355,7 @@
   }
 
   .value-card p {
-    font-size: 14px;
+    font-size: 15px;
     color: var(--grey);
     line-height: 1.7;
   }
@@ -407,7 +409,7 @@
   .audience-card.her .audience-label { color: var(--teal); }
 
   .audience-card h3 { font-size: 24px; font-weight: 700; margin-bottom: 14px; line-height: 1.25; }
-  .audience-card p  { font-size: 15px; color: var(--grey); line-height: 1.7; margin-bottom: 28px; }
+  .audience-card p  { font-size: 16px; color: var(--grey); line-height: 1.7; margin-bottom: 28px; }
 
   .benefits { list-style: none; display: flex; flex-direction: column; gap: 10px; }
 
@@ -533,7 +535,7 @@
     }
 
     .hero-visual { order: -1; max-height: 300px; }
-    .hero-visual svg { max-height: 280px; }
+    .hero-visual img { max-height: 280px; width: auto; }
 
     .hero-h1 { font-size: 32px; }
     .hero-sub { font-size: 16px; }
@@ -571,21 +573,23 @@
 </style>
 </head>
 <body>
+<?= renderPreviewBanner() ?>
 
 <!-- NAV -->
 <nav>
-  <a href="index.html" class="nav-logo">
+  <a href="index.php" class="nav-logo">
     <img src="assets/images/logo.png" alt="Estrich Digital Logo"/>
   </a>
   <button class="nav-hamburger" onclick="toggleNav(this)" aria-label="Menü">
     <span></span><span></span><span></span>
   </button>
   <ul class="nav-links">
-    <li><a href="#how" onclick="closeNav()">So funktioniert's</a></li>
-    <li><a href="#value" onclick="closeNav()">Ihr Nutzen</a></li>
-    <li><a href="#technik" onclick="closeNav()">Technik</a></li>
-    <li><a href="pages/news.html">News</a></li>
-    <li><a href="pages/kontakt.html" class="nav-cta">Kontakt aufnehmen</a></li>
+    <li><a href="#how" onclick="closeNav()"><?= e($ui['nav']['how'] ?? "So funktioniert's") ?></a></li>
+    <li><a href="#value" onclick="closeNav()"><?= e($ui['nav']['value'] ?? 'Ihr Nutzen') ?></a></li>
+    <li><a href="#technik" onclick="closeNav()"><?= e($ui['nav']['technik'] ?? 'Technik') ?></a></li>
+    <li><a href="pages/news.html"><?= e($ui['nav']['news'] ?? 'News') ?></a></li>
+    <?= renderLangSwitcher() ?>
+    <li><a href="pages/kontakt.php" class="nav-cta"><?= e($ui['nav']['kontakt'] ?? 'Kontakt aufnehmen') ?></a></li>
   </ul>
 </nav>
 
@@ -600,48 +604,13 @@
     <p class="hero-sub">Kontinuierliche Feuchtemessung direkt im Estrich – manipulationssicher und transparent dokumentiert. Damit Termine eingehalten und Trocknungserfolge bewiesen werden.</p>
     <div class="hero-actions">
       <a href="#how" class="btn-primary">Wie es funktioniert</a>
-      <a href="pages/kontakt.html" class="btn-secondary">Demo anfragen →</a>
+      <a href="pages/kontakt.php" class="btn-secondary">Demo anfragen →</a>
     </div>
   </div>
 
   <div class="hero-visual">
-    <div style="width:360px; height:460px;" class="float">
-      <svg viewBox="0 0 400 480" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
-        <rect x="30" y="300" width="320" height="160" rx="12" fill="#4A4540"/>
-        <line x1="30" y1="320" x2="350" y2="320" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-        <line x1="30" y1="350" x2="350" y2="350" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-        <line x1="30" y1="380" x2="350" y2="380" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
-        <line x1="30" y1="300" x2="350" y2="300" stroke="rgba(255,209,102,0.25)" stroke-width="1.5" stroke-dasharray="8,6"/>
-        <rect x="167" y="300" width="46" height="130" rx="3" fill="#E05800"/>
-        <rect x="177" y="300" width="26" height="130" rx="2" fill="#1A6060"/>
-        <rect x="167" y="130" width="46" height="170" rx="3" fill="#FF6B1A"/>
-        <rect x="177" y="130" width="26" height="170" rx="2" fill="#1A8070"/>
-        <ellipse cx="190" cy="132" rx="52" ry="7" fill="#1C5050"/>
-        <path d="M 138,132 Q 190,98 242,132 Z" fill="#E05800"/>
-        <ellipse cx="190" cy="132" rx="52" ry="7" fill="#FF6B1A" opacity="0.7"/>
-        <line x1="120" y1="348" x2="165" y2="348" stroke="rgba(255,209,102,0.5)" stroke-width="1.5" stroke-dasharray="4,3"/>
-        <circle cx="118" cy="348" r="4" fill="#FFD166" opacity="0.8"/>
-        <text x="68" y="352" fill="#FFD166" font-family="Space Mono,monospace" font-size="10" opacity="0.7">Messfl. 1</text>
-        <line x1="120" y1="388" x2="165" y2="388" stroke="rgba(255,209,102,0.5)" stroke-width="1.5" stroke-dasharray="4,3"/>
-        <circle cx="118" cy="388" r="4" fill="#FFD166" opacity="0.8"/>
-        <text x="68" y="392" fill="#FFD166" font-family="Space Mono,monospace" font-size="10" opacity="0.7">Messfl. 2</text>
-        <line x1="215" y1="348" x2="258" y2="348" stroke="rgba(255,209,102,0.5)" stroke-width="1.5" stroke-dasharray="4,3"/>
-        <circle cx="260" cy="348" r="4" fill="#FFD166" opacity="0.8"/>
-        <text x="266" y="352" fill="#FFD166" font-family="Space Mono,monospace" font-size="10" opacity="0.7">Messfl. 3</text>
-        <line x1="215" y1="388" x2="258" y2="388" stroke="rgba(255,209,102,0.5)" stroke-width="1.5" stroke-dasharray="4,3"/>
-        <circle cx="260" cy="388" r="4" fill="#FFD166" opacity="0.8"/>
-        <text x="266" y="392" fill="#FFD166" font-family="Space Mono,monospace" font-size="10" opacity="0.7">Messfl. 4</text>
-        <line x1="250" y1="130" x2="250" y2="300" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-dasharray="4,3"/>
-        <line x1="246" y1="130" x2="254" y2="130" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-        <line x1="246" y1="300" x2="254" y2="300" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-        <text x="258" y="217" fill="rgba(255,255,255,0.45)" font-family="Space Mono,monospace" font-size="10">~60 mm</text>
-        <text x="258" y="231" fill="rgba(255,255,255,0.45)" font-family="Space Mono,monospace" font-size="10">über OK</text>
-        <ellipse cx="190" cy="112" rx="36" ry="8" stroke="#FF6B1A" stroke-width="1.5" fill="none" opacity="0.5"/>
-        <ellipse cx="190" cy="90"  rx="54" ry="12" stroke="#FF6B1A" stroke-width="1.2" fill="none" opacity="0.3"/>
-        <ellipse cx="190" cy="65"  rx="72" ry="16" stroke="#FF6B1A" stroke-width="1"   fill="none" opacity="0.15"/>
-        <rect x="280" y="58" width="110" height="24" rx="6" fill="rgba(26,122,110,0.22)" stroke="#1A7A6E" stroke-width="1"/>
-        <text x="335" y="75" fill="#1A7A6E" font-family="Space Mono,monospace" font-size="9" font-weight="700" text-anchor="middle">LTE-M / NB-IoT</text>
-      </svg>
+    <div class="float">
+      <img src="assets/images/hero-sensor.png" alt="Estrich Digital Sensor – Querschnitt" style="width:100%; max-width:460px; height:auto;">
     </div>
   </div>
 </section>
@@ -660,203 +629,125 @@
 </div>
 
 <!-- HOW IT WORKS -->
+<?php $how = loadContent('how', $lang); ?>
 <section class="how" id="how">
   <div class="how-header reveal">
     <div>
-      <div class="section-eyebrow">So funktioniert's</div>
-      <h2 class="section-title">Vier Schritte.<br>Lückenlose Dokumentation.</h2>
+      <div class="section-eyebrow"><?= e($how['sectionEyebrow'] ?? "So funktioniert's") ?></div>
+      <h2 class="section-title"><?= nl2br(e($how['sectionTitle'] ?? '')) ?></h2>
     </div>
-    <p class="section-sub" style="max-width:340px">Vom Einbau bis zur Freigabe – alles digital nachvollziehbar.</p>
+    <p class="section-sub" style="max-width:340px"><?= e($how['sectionSub'] ?? '') ?></p>
   </div>
-  <div class="how-steps reveal">
-    <div class="how-step" onclick="toggleStep(this)">
-      <div class="how-step-num">01</div>
+  <?php $isStatic = ($how['displayMode'] ?? 'accordion') === 'static'; ?>
+  <div class="how-steps<?= $isStatic ? ' how-steps--static' : '' ?> reveal">
+    <?php foreach (($how['steps'] ?? []) as $step): ?>
+    <div class="how-step<?= $isStatic ? ' active' : '' ?>"<?= $isStatic ? '' : ' onclick="toggleStep(this)"' ?>>
+      <div class="how-step-num"><?= e($step['number'] ?? '') ?></div>
       <div class="how-step-header">
         <div class="how-step-header-left">
-          <div class="how-step-tag">Einbau</div>
-          <h3>Sensormontage</h3>
-          <p>Der Sensor wird beim Estricheinbau direkt eingesetzt. Er steht zunächst über und überträgt ab dem Einbau kontinuierlich die Feuchtemessung.</p>
+          <div class="how-step-tag"><?= e($step['tag'] ?? '') ?></div>
+          <h3><?= e($step['title'] ?? '') ?></h3>
+          <p><?= e($step['description'] ?? '') ?></p>
         </div>
+        <?php if (!$isStatic): ?>
         <div class="how-step-toggle"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+        <?php endif; ?>
       </div>
-      <div class="how-step-detail">
+      <div class="how-step-detail"<?= $isStatic ? ' style="max-height:none;opacity:1"' : '' ?>>
         <div class="how-step-detail-inner">
-          <p class="how-step-detail-text">Der Sensor wird während des Estricheinbaus direkt in den noch frischen Estrich eingesetzt. Bei Fließestrich wird eine Montageplatte verwendet um ein Aufschwimmen zu vermeiden. Bei erdfeuchtem Estrich ist es nicht zwingend nötig, wird aber für einen korrekten Abstand zur Fußbodenheizung empfohlen. Ab dem Moment der Platzierung beginnt die lückenlose, automatische Aufzeichnung der Restfeuchte. So entsteht von Anfang an eine vollständige Dokumentation – ganz ohne manuelles Zutun.</p>
+          <p class="how-step-detail-text"><?= nl2br(e($step['detail'] ?? '')) ?></p>
+          <?php if (!empty($step['image1']) || !empty($step['image2'])): ?>
           <div class="how-step-images">
-            <img src="assets/images/step-01a.jpg" alt="Sensor wird in frischen Estrich eingesetzt">
-            <img src="assets/images/step-01b.jpg" alt="Eingebauter Sensor im Estrich">
+            <?php if (!empty($step['image1'])): ?>
+            <img src="<?= e($step['image1']) ?>" alt="<?= e($step['image1Alt'] ?? '') ?>">
+            <?php endif; ?>
+            <?php if (!empty($step['image2'])): ?>
+            <img src="<?= e($step['image2']) ?>" alt="<?= e($step['image2Alt'] ?? '') ?>">
+            <?php endif; ?>
           </div>
+          <?php endif; ?>
         </div>
       </div>
     </div>
-    <div class="how-step" onclick="toggleStep(this)">
-      <div class="how-step-num">02</div>
-      <div class="how-step-header">
-        <div class="how-step-header-left">
-          <div class="how-step-tag">Kürzen</div>
-          <h3>Kürzen</h3>
-          <p>Nach dem Abbinden wird der überstehende Teil bündig mit dem Estrich abgeschnitten. Der Schutzdeckel wird wieder aufgesetzt – keine Stolperkante, optisch unauffällig.</p>
-        </div>
-        <div class="how-step-toggle"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
-      </div>
-      <div class="how-step-detail">
-        <div class="how-step-detail-inner">
-          <p class="how-step-detail-text">Sobald der Estrich begehbar ist, wird der überstehende Teil des Sensors mit einer handelsüblichen Säge bündig abgeschnitten. Anschließend wird der mitgelieferte Schutzdeckel aufgesetzt. Das Ergebnis: eine ebene, stolperfreie Oberfläche, die optisch kaum auffällt. Der Sensor misst währenddessen im Inneren zuverlässig weiter.
-			<br><br>Um den Ablauf noch weiter zu vereinfachen arbeiten wir derzeit an einer Lösung der es ermöglicht den Sensor vor der Montage zu kürzen.</p>
-          <div class="how-step-images">
-            <img src="assets/images/step-02a.jpg" alt="Überstand wird bündig abgeschnitten">
-            <img src="assets/images/step-02b.jpg" alt="Schutzdeckel auf dem Sensor">
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="how-step" onclick="toggleStep(this)">
-      <div class="how-step-num">03</div>
-      <div class="how-step-header">
-        <div class="how-step-header-left">
-          <div class="how-step-tag">Auslesen</div>
-          <h3>Objekte anlegen & Daten abrufen</h3>
-          <p>Die Daten werden automatisch übertragen und online aufbereitet. Sehen Sie Live wie der Estrich trocknet.</p>
-        </div>
-        <div class="how-step-toggle"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
-      </div>
-      <div class="how-step-detail">
-        <div class="how-step-detail-inner">
-          <p class="how-step-detail-text">Das Objekt wird mit wenigen Klicks online angelegt und die Sensoren zugewiesen. Ein paar Grundparameter wie Einbauhöhe und verarbeitetes Material eintragen und schon sieht man nach wenigen Tagen die ersten Trocknungsfortschritte.</p>
-          <div class="how-step-images">
-            <img src="assets/images/step-03a.jpg" alt="Sendeeinheit wird herausgezogen">
-            <img src="assets/images/step-03b.jpg" alt="Freigabenachweis auf dem Display">
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="how-step" onclick="toggleStep(this)">
-      <div class="how-step-num">04</div>
-      <div class="how-step-header">
-        <div class="how-step-header-left">
-          <div class="how-step-tag">Rückbau</div>
-          <h3>Demontage und Wiederverwendung</h3>
-          <p>Deckel abnehmen, Sendeeinheit herausziehen, auf der nächsten Baustelle einsetzen.</p>
-        </div>
-        <div class="how-step-toggle"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
-      </div>
-      <div class="how-step-detail">
-        <div class="how-step-detail-inner">
-          <p class="how-step-detail-text">Zum Entnehmen der Sendeeinheit wird der Schutzdeckel entfernt und die Sendeeinheit mit einem Entnahme-Werkzeug herausgezogen. Das Messrohr wird verschlossen, die Sendeeinheit wird mit dem Ladegerät für die nächste Baustelle bereit gemacht.
-			<br><br>Die Gewerke von Estrich-Leger und Fußbodenleger sind getrennt? Fordern Sie einfach die Rücksendebox mit an. In der Rücksendebox befindet sich das Entnahmewerkzeug. Nur noch die Sendeeinheiten hineinpacken und zur Post bringen. Wir kümmern uns um alles weitere.</p>
-          <div class="how-step-images">
-            <img src="assets/images/step-04a.jpg" alt="Sendeeinheit wird entnommen">
-            <img src="assets/images/step-04b.jpg" alt="Sendeeinheit wird aufgeladen">
-          </div>
-        </div>
-      </div>
-    </div>
-
+    <?php endforeach; ?>
+  </div>
 </section>
 
 <!-- VALUE -->
+<?php $value = loadContent('value', $lang); ?>
 <section class="value-section" id="value">
   <div class="reveal">
-    <div class="section-eyebrow">Ihr Nutzen</div>
-    <h2 class="section-title">Echte Daten.<br>Mehr Vertrauen.</h2>
+    <div class="section-eyebrow"><?= e($value['sectionEyebrow'] ?? 'Ihr Nutzen') ?></div>
+    <h2 class="section-title"><?= nl2br(e($value['sectionTitle'] ?? '')) ?></h2>
   </div>
   <div class="value-grid reveal">
+    <?php foreach (($value['benefits'] ?? []) as $card): ?>
     <div class="value-card">
       <div class="value-icon">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 2L3 6v5c0 4.4 3.3 8.5 8 9.5 4.7-1 8-5.1 8-9.5V6l-8-4z" stroke="#FF6B1A" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <?= $card['iconSvg'] ?? '' ?>
       </div>
-      <h3>Lückenlose Freigabenachweise</h3>
-      <p>Manipulationssichere Messdaten direkt aus dem Estrich – kein CM-Gerät, keine Stichproben. Lückenlos, objektiv, jederzeit reproduzierbar.</p>
+      <h3><?= e($card['title'] ?? '') ?></h3>
+      <p><?= e($card['description'] ?? '') ?></p>
     </div>
-    <div class="value-card">
-      <div class="value-icon">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="9" stroke="#FF6B1A" stroke-width="1.8"/><path d="M11 6v5l3 3" stroke="#FF6B1A" stroke-width="1.8" stroke-linecap="round"/></svg>
-      </div>
-      <h3>Schnellere Bauprozesse</h3>
-      <p>Früherkennung von Trocknungsfortschritten vermeidet unnötige Wartezeiten. Folgegewerke können präzise geplant und termingerecht beauftragt werden.</p>
-    </div>
-    <div class="value-card">
-      <div class="value-icon">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 12l5 5L18 6" stroke="#FF6B1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <h3>Produktwirksamkeit dokumentieren</h3>
-      <p>Für Estrich-Hersteller ist der Sensor ein Dokumentationswerkzeug: Die Wirksamkeit von Trocknungsbeschleunigern lässt sich mit echten Verlaufskurven nachvollziehen.</p>
-    </div>
-    <div class="value-card">
-      <div class="value-icon">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 11h4l3-7 4 14 3-7h4" stroke="#FF6B1A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <h3>Kontinuierliche Verlaufsdaten</h3>
-      <p>Feuchte und Temperatur an bis zu 8 Messpunkten – rund um die Uhr. Kein manueller Aufwand, keine Stichproben. Der Sensor arbeitet still und zuverlässig.</p>
-    </div>
+    <?php endforeach; ?>
   </div>
 </section>
 
 <!-- AUDIENCES -->
+<?php $audiences = loadContent('audiences', $lang); ?>
 <section class="audiences-section">
   <div class="reveal">
-    <div class="section-eyebrow">Zielgruppen</div>
-    <h2 class="section-title">Wer profitiert?</h2>
+    <div class="section-eyebrow"><?= e($audiences['sectionEyebrow'] ?? 'Zielgruppen') ?></div>
+    <h2 class="section-title"><?= nl2br(e($audiences['sectionTitle'] ?? '')) ?></h2>
   </div>
   <div class="audience-grid reveal">
-    <div class="audience-card gu">
-      <div class="audience-label">Für Generalunternehmer</div>
-      <h3>Freigabe mit einem Klick</h3>
-      <p>Als GU tragen Sie die Verantwortung für termingerechte Übergaben. Mit Estrich Digital haben Sie den Trocknungsstatus jederzeit im Blick – und im Streitfall den Beweis.</p>
+    <?php foreach (($audiences['audiences'] ?? []) as $aud): ?>
+    <div class="audience-card <?= e($aud['cssClass'] ?? '') ?>">
+      <div class="audience-label"><?= e($aud['label'] ?? '') ?></div>
+      <h3><?= e($aud['title'] ?? '') ?></h3>
+      <p><?= e($aud['description'] ?? '') ?></p>
       <ul class="benefits">
-        <li><span class="check">✓</span> Lückenlose Freigabedokumentation</li>
-        <li><span class="check">✓</span> Frühwarnung bei Verzögerungen</li>
-        <li><span class="check">✓</span> Terminplanung auf Datenbasis</li>
-        <li><span class="check">✓</span> Weniger Rückfragen mit dem Estrichleger</li>
+        <?php foreach (($aud['benefits'] ?? []) as $benefit): ?>
+        <li><span class="check">✓</span> <?= e($benefit) ?></li>
+        <?php endforeach; ?>
       </ul>
     </div>
-    <div class="audience-card her">
-      <div class="audience-label">Für Estrich-Hersteller</div>
-      <h3>Trocknungsleistung objektiv belegen</h3>
-      <p>Sie verkaufen Trocknungsbeschleuniger – aber fahren immer noch nach Gefühl zum Freimessen? Mit Estrich Digital können Sie die Wirksamkeit Ihrer Produkte erstmals mit echten Daten dokumentieren und belegen.</p>
-      <ul class="benefits">
-        <li><span class="check">✓</span> Vor/nach-Vergleiche in Echtzeit</li>
-        <li><span class="check">✓</span> Vermarktungsmaterial mit echten Kurven</li>
-        <li><span class="check">✓</span> Differenzierung gegenüber Wettbewerb</li>
-        <li><span class="check">✓</span> Grundlage für Produktoptimierung</li>
-      </ul>
-    </div>
+    <?php endforeach; ?>
   </div>
 </section>
 
 <!-- SPECS -->
+<?php $specs = loadContent('specs', $lang); ?>
 <section class="specs-section" id="technik" style="background:rgba(0,0,0,0.15);">
   <div class="reveal">
-    <div class="section-eyebrow">Technische Daten</div>
-    <h2 class="section-title">Kompakt. Robust. Präzise.</h2>
-    <p class="section-sub">Entwickelt für den harten Baustelleneinsatz – und patentiert.</p>
+    <div class="section-eyebrow"><?= e($specs['sectionEyebrow'] ?? 'Technische Daten') ?></div>
+    <h2 class="section-title"><?= nl2br(e($specs['sectionTitle'] ?? '')) ?></h2>
+    <p class="section-sub"><?= e($specs['sectionSub'] ?? '') ?></p>
   </div>
   <div class="specs-grid reveal">
-    <div class="spec-item"><div class="spec-value">50×50</div><div class="spec-label">Grundfläche in mm</div></div>
-    <div class="spec-item"><div class="spec-value">120 mm</div><div class="spec-label">Gesamthöhe</div></div>
-    <div class="spec-item"><div class="spec-value">8</div><div class="spec-label">Kapazitive Messflächen</div></div>
-    <div class="spec-item"><div class="spec-value">LTE-M / NB-IoT</div><div class="spec-label">IoT-Übertragungsprotokoll</div></div>
-    <div class="spec-item"><div class="spec-value">24/7</div><div class="spec-label">Kontinuierliche Messung</div></div>
-    <div class="spec-item"><div class="spec-value">±0,1</div><div class="spec-label">Messgenauigkeit CM-%</div></div>
-    <div class="spec-item"><div class="spec-value">2019</div><div class="spec-label">Entwicklungsbeginn</div></div>
-    <div class="spec-item"><div class="spec-value">EU</div><div class="spec-label">Patent angemeldet</div></div>
+    <?php foreach (($specs['specs'] ?? []) as $spec): ?>
+    <div class="spec-item"><div class="spec-value"><?= e($spec['value'] ?? '') ?></div><div class="spec-label"><?= e($spec['label'] ?? '') ?></div></div>
+    <?php endforeach; ?>
   </div>
 </section>
 
 <!-- CHART -->
+<?php $chart = loadContent('chart', $lang); ?>
 <div class="chart-wrap-outer reveal">
   <div class="chart-section-inner">
     <div class="chart-header">
       <div>
-        <div class="section-eyebrow">Verlaufsdaten · Beispiel</div>
-        <div style="font-size:18px;font-weight:700;">Feuchte & Temperatur über Zeit</div>
+        <div class="section-eyebrow"><?= e($chart['sectionEyebrow'] ?? 'Verlaufsdaten · Beispiel') ?></div>
+        <div style="font-size:18px;font-weight:700;"><?= e($chart['headerTitle'] ?? 'Feuchte & Temperatur über Zeit') ?></div>
       </div>
       <div class="chart-legend">
-        <div class="legend-item"><div class="legend-dot" style="background:#FF6B1A"></div>CM-% Unten</div>
-        <div class="legend-item"><div class="legend-dash" style="border-color:#1A7A6E"></div>CM-% Oben</div>
-        <div class="legend-item"><div class="legend-dot" style="background:#FFD166"></div>Temperatur °C</div>
-        <div class="legend-item"><div class="legend-dash" style="border-color:rgba(255,255,255,0.3)"></div>Freigabewert (2,0)</div>
+        <?php foreach (($chart['legend'] ?? []) as $item): ?>
+        <?php if (($item['type'] ?? '') === 'dot'): ?>
+        <div class="legend-item"><div class="legend-dot" style="background:<?= e($item['color'] ?? '') ?>"></div><?= e($item['label'] ?? '') ?></div>
+        <?php else: ?>
+        <div class="legend-item"><div class="legend-dash" style="border-color:<?= e($item['color'] ?? '') ?>"></div><?= e($item['label'] ?? '') ?></div>
+        <?php endif; ?>
+        <?php endforeach; ?>
       </div>
     </div>
     <div class="chart-bg">
@@ -915,7 +806,7 @@
   <h2 class="section-title reveal">Bereit für den digitalen<br>Trocknungsnachweis?</h2>
   <p class="section-sub reveal">Sprechen Sie mit uns über Pilotprojekte, Systemintegration oder eine Demo vor Ort.</p>
   <div class="cta-actions reveal">
-    <a href="pages/kontakt.html" class="btn-primary">Kontakt aufnehmen</a>
+    <a href="pages/kontakt.php" class="btn-primary"><?= e($ui['nav']['kontakt'] ?? 'Kontakt aufnehmen') ?></a>
     <a href="#how" class="btn-secondary">Nochmal durchlesen</a>
   </div>
 </section>
@@ -924,12 +815,12 @@
 <footer>
   <div class="footer-left">
     <div class="footer-wordmark">ESTRICH DIGITAL</div>
-    <div class="footer-meta">Estrich Digital GmbH · Erlenbach · © 2025 · Alle Rechte vorbehalten</div>
+    <div class="footer-meta"><?= e($ui['footer']['copyright'] ?? 'Estrich Digital GmbH · Erlenbach · © 2025 · Alle Rechte vorbehalten') ?></div>
   </div>
   <div class="footer-right">
-    <a href="pages/impressum.html">Impressum</a>
-    <a href="pages/datenschutz.html">Datenschutz</a>
-    <a href="pages/kontakt.html">Kontakt</a>
+    <a href="pages/impressum.php"><?= e($ui['footer']['impressum'] ?? 'Impressum') ?></a>
+    <a href="pages/datenschutz.php"><?= e($ui['footer']['datenschutz'] ?? 'Datenschutz') ?></a>
+    <a href="pages/kontakt.php"><?= e($ui['footer']['kontakt'] ?? 'Kontakt') ?></a>
   </div>
 </footer>
 

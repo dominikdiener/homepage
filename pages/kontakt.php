@@ -1,5 +1,6 @@
+<?php require_once __DIR__ . '/../includes/content.php'; $lang = getCurrentLang(); $ui = loadUI($lang); $kontakt = loadContent('kontakt', $lang); ?>
 <!DOCTYPE html>
-<html lang="de">
+<html lang="<?= e($lang) ?>">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,39 +8,41 @@
 <meta name="description" content="Kontakt – Estrich Digital. Sprechen Sie mit uns über Pilotprojekte, Demos oder Systemintegration.">
 <title>Kontakt – Estrich Digital</title>
 <link rel="stylesheet" href="../assets/css/main.css">
+<?= renderCustomCSS($lang ?? null) ?>
 </head>
 <body>
+<?= renderPreviewBanner() ?>
 
 <nav>
-  <a href="../index.html" class="nav-logo">
+  <a href="../index.php" class="nav-logo">
     <img src="../assets/images/logo.png" alt="Estrich Digital Logo"/>
-    <span class="nav-wordmark">ESTRICH DIGITAL</span>
   </a>
   <button class="nav-hamburger" onclick="toggleNav(this)" aria-label="Menü">
     <span></span><span></span><span></span>
   </button>
   <ul class="nav-links">
-    <li><a href="../index.html#how" onclick="closeNav()">So funktioniert's</a></li>
-    <li><a href="../index.html#value" onclick="closeNav()">Ihr Nutzen</a></li>
-    <li><a href="../index.html#technik" onclick="closeNav()">Technik</a></li>
-    <li><a href="news.php">News</a></li>
-    <li><a href="kontakt.html" class="nav-cta">Kontakt aufnehmen</a></li>
+    <li><a href="../index.php#how" onclick="closeNav()"><?= e($ui['nav']['how'] ?? "So funktioniert's") ?></a></li>
+    <li><a href="../index.php#value" onclick="closeNav()"><?= e($ui['nav']['value'] ?? 'Ihr Nutzen') ?></a></li>
+    <li><a href="../index.php#technik" onclick="closeNav()"><?= e($ui['nav']['technik'] ?? 'Technik') ?></a></li>
+    <li><a href="news.php" onclick="closeNav()"><?= e($ui['nav']['news'] ?? 'News') ?></a></li>
+    <?= renderLangSwitcher() ?>
+    <li><a href="kontakt.php" class="nav-cta"><?= e($ui['nav']['kontakt'] ?? 'Kontakt aufnehmen') ?></a></li>
   </ul>
 </nav>
 
 <div class="page-hero">
   <div class="page-hero-content">
-    <div class="section-eyebrow">Kontakt</div>
-    <h1 class="section-title" style="font-size: clamp(32px,4vw,52px);">Sprechen Sie mit uns.</h1>
-    <p class="section-sub">Ob Pilotprojekt, Demo vor Ort oder Fragen zur Systemintegration – wir antworten schnell und unkompliziert.</p>
+    <div class="section-eyebrow"><?= e($kontakt['heroEyebrow'] ?? 'Kontakt') ?></div>
+    <h1 class="section-title" style="font-size: clamp(32px,4vw,52px);"><?= e($kontakt['heroTitle'] ?? '') ?></h1>
+    <p class="section-sub"><?= e($kontakt['heroSub'] ?? '') ?></p>
   </div>
 </div>
 
 <div class="contact-grid">
   <!-- LEFT: Info -->
   <div class="contact-info">
-    <h3>Estrich Digital</h3>
-    <p>Wir helfen Generalunternehmern und Estrich-Herstellern, ihren Trocknungsprozess digital zu dokumentieren – manipulationssicher und rechtssicher.</p>
+    <h3><?= e($kontakt['companyName'] ?? 'Estrich Digital') ?></h3>
+    <p><?= e($kontakt['companyDescription'] ?? '') ?></p>
 
     <div class="contact-detail">
       <div class="contact-detail-icon">
@@ -47,7 +50,7 @@
       </div>
       <div class="contact-detail-text">
         <strong>Adresse</strong>
-        <span>Estrich Digital<br>Königsberger Str. 6<br>57334 Bad Laasphe</span>
+        <span><?= nl2br(e($kontakt['address'] ?? '')) ?></span>
       </div>
     </div>
 
@@ -57,7 +60,7 @@
       </div>
       <div class="contact-detail-text">
         <strong>E-Mail</strong>
-        <span><a href="mailto:info@estrich-digital.de" style="color:var(--orange)">info@estrich-digital.de</a></span>
+        <span><a href="mailto:<?= e($kontakt['email'] ?? '') ?>" style="color:var(--orange)"><?= e($kontakt['email'] ?? '') ?></a></span>
       </div>
     </div>
 
@@ -67,13 +70,13 @@
       </div>
       <div class="contact-detail-text">
         <strong>Telefon</strong>
-        <span><a href="tel:+49000000000" style="color:var(--orange)">+49 (0) 2752/5099699</a></span>
+        <span><a href="<?= e($kontakt['phoneHref'] ?? '') ?>" style="color:var(--orange)"><?= e($kontakt['phone'] ?? '') ?></a></span>
       </div>
     </div>
 
     <div style="margin-top: 40px; padding: 24px; background: var(--teal-dim); border: 1px solid rgba(26,122,110,0.3); border-radius: 14px;">
       <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:1.5px; color:var(--teal); text-transform:uppercase; margin-bottom:10px;">Schnelle Antwort</div>
-      <p style="font-size:14px; color:var(--grey); line-height:1.65;">Wir antworten in der Regel innerhalb von 1 Werktag.</p>
+      <p style="font-size:14px; color:var(--grey); line-height:1.65;"><?= e($kontakt['responseNote'] ?? '') ?></p>
     </div>
   </div>
 
@@ -126,7 +129,7 @@
       </div>
 
       <button type="submit" class="btn-primary form-submit">Anfrage senden</button>
-      <p class="form-note">* Pflichtfelder. Ihre Daten werden ausschließlich zur Beantwortung Ihrer Anfrage verwendet. Weitere Informationen finden Sie in unserer <a href="datenschutz.html">Datenschutzerklärung</a>.</p>
+      <p class="form-note">* Pflichtfelder. Ihre Daten werden ausschließlich zur Beantwortung Ihrer Anfrage verwendet. Weitere Informationen finden Sie in unserer <a href="datenschutz.php">Datenschutzerklärung</a>.</p>
       <div class="success-msg" id="success-msg">✓ Vielen Dank! Ihre Anfrage wurde gesendet. Wir melden uns in Kürze.</div>
       <div class="success-msg" id="error-msg" style="display:none;color:var(--orange)">Leider konnte Ihre Anfrage nicht gesendet werden. Bitte versuchen Sie es erneut oder schreiben Sie uns direkt an Dominik.diener@estrich-digital.de.</div>
     </form>
@@ -136,12 +139,12 @@
 <footer>
   <div class="footer-left">
     <div class="footer-wordmark">ESTRICH DIGITAL</div>
-    <div class="footer-meta">Estrich Digital · Bad Laasphe · 2026 · Alle Rechte vorbehalten</div>
+    <div class="footer-meta"><?= e($ui['footer']['copyright'] ?? '') ?></div>
   </div>
   <div class="footer-right">
-    <a href="impressum.html">Impressum</a>
-    <a href="datenschutz.html">Datenschutz</a>
-    <a href="kontakt.html">Kontakt</a>
+    <a href="impressum.php"><?= e($ui['footer']['impressum'] ?? 'Impressum') ?></a>
+    <a href="datenschutz.php"><?= e($ui['footer']['datenschutz'] ?? 'Datenschutz') ?></a>
+    <a href="kontakt.php"><?= e($ui['footer']['kontakt'] ?? 'Kontakt') ?></a>
   </div>
 </footer>
 

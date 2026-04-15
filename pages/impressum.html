@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
 <title>Impressum – Estrich Digital</title>
 <link rel="stylesheet" href="../assets/css/main.css">
 </head>
@@ -13,10 +14,14 @@
     <img src="../assets/images/logo.png" alt="Estrich Digital Logo"/>
     <span class="nav-wordmark">ESTRICH DIGITAL</span>
   </a>
+  <button class="nav-hamburger" onclick="toggleNav(this)" aria-label="Menü">
+    <span></span><span></span><span></span>
+  </button>
   <ul class="nav-links">
-    <li><a href="../index.html#how">So funktioniert's</a></li>
-    <li><a href="../index.html#value">Ihr Nutzen</a></li>
-    <li><a href="../index.html#technik">Technik</a></li>
+    <li><a href="../index.html#how" onclick="closeNav()">So funktioniert's</a></li>
+    <li><a href="../index.html#value" onclick="closeNav()">Ihr Nutzen</a></li>
+    <li><a href="../index.html#technik" onclick="closeNav()">Technik</a></li>
+    <li><a href="news.php">News</a></li>
     <li><a href="kontakt.html" class="nav-cta">Kontakt aufnehmen</a></li>
   </ul>
 </nav>
