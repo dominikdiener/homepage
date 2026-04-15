@@ -1,16 +1,16 @@
 # Estrich Digital – Apache Konfiguration
 
 # Fehlerseiten
-ErrorDocument 404 /index.html
+ErrorDocument 404 /index.php
 
-# www weiterleiten auf non-www (oder umgekehrt – bitte anpassen)
+# www weiterleiten auf non-www
 RewriteEngine On
 RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+RewriteRule ^ http://%1%{REQUEST_URI} [R=301,L]
 
-# HTTP auf HTTPS weiterleiten
-RewriteCond %{HTTPS} off
-RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+# HTTPS-Redirect deaktiviert – Homepage hat (noch) kein eigenes SSL-Zertifikat
+# RewriteCond %{HTTPS} off
+# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
 # Verzeichnis-Listings deaktivieren
 Options -Indexes
