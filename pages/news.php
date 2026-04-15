@@ -195,7 +195,7 @@ $categoryLabels = [
     <li><a href="../index.php#value">Ihr Nutzen</a></li>
     <li><a href="../index.php#technik">Technik</a></li>
     <li><a href="news.php" class="active">News</a></li>
-    <li><a href="kontakt.html" class="nav-cta">Kontakt aufnehmen</a></li>
+    <li><a href="kontakt.php" class="nav-cta">Kontakt aufnehmen</a></li>
   </ul>
 </nav>
 
@@ -261,9 +261,9 @@ $categoryLabels = [
     <div class="footer-meta">Estrich Digital · Bad Laasphe · 2026 · Alle Rechte vorbehalten</div>
   </div>
   <div class="footer-right">
-    <a href="impressum.html">Impressum</a>
-    <a href="datenschutz.html">Datenschutz</a>
-    <a href="kontakt.html">Kontakt</a>
+    <a href="impressum.php">Impressum</a>
+    <a href="datenschutz.php">Datenschutz</a>
+    <a href="kontakt.php">Kontakt</a>
   </div>
 </footer>
 
