@@ -60,7 +60,6 @@ $categoryLabels = [
     display: flex;
     flex-direction: column;
     gap: 1.8rem;
-    max-width: 860px;
 }
 
 .news-card {
