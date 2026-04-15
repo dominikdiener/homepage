@@ -260,6 +260,9 @@ $categoryLabels = [
   <a href="../index.php" class="nav-logo">
     <img src="../assets/images/logo.png" alt="Estrich Digital Logo"/>
   </a>
+  <button class="nav-hamburger" onclick="toggleNav(this)" aria-label="Menü">
+    <span></span><span></span><span></span>
+  </button>
   <ul class="nav-links">
     <li><a href="../index.php#how">So funktioniert's</a></li>
     <li><a href="../index.php#value">Ihr Nutzen</a></li>
