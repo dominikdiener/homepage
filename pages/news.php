@@ -197,6 +197,47 @@ $categoryLabels = [
 .news-card-full-inner ul,
 .news-card-full-inner ol  { padding-left: 1.2rem; margin-bottom: .8rem; }
 
+.news-pdfs {
+    margin-top: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+}
+.news-pdf-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-family: 'Space Mono', monospace;
+    font-size: .8rem;
+    color: var(--orange);
+    text-decoration: none;
+    padding: .5rem .8rem;
+    border: 1px solid rgba(255,107,26,.2);
+    border-radius: 8px;
+    transition: background .2s;
+}
+.news-pdf-link:hover { background: rgba(255,107,26,.08); }
+.news-pdf-link svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+.news-pdf-embed {
+    width: 100%;
+    height: 500px;
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 8px;
+}
+
+.news-card-subtitle {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--orange);
+    margin-bottom: .6rem;
+}
+.news-card-author, .news-card-nr {
+    font-family: 'Space Mono', monospace;
+    font-size: .7rem;
+    color: var(--grey);
+}
+
 .news-empty {
     text-align: center;
     padding: 4rem 1rem;
@@ -209,7 +250,7 @@ $categoryLabels = [
 
 @media (max-width: 768px) {
     .news-section { padding: 0 20px 50px; }
-    .news-grid { grid-template-columns: 1fr; }
+    .news-pdf-embed { height: 350px; }
 }
 </style>
 </head>
@@ -271,11 +312,15 @@ $categoryLabels = [
             <?php endif; ?>
             <p class="news-card-excerpt"><?= htmlspecialchars($a['content']) ?></p>
             <?php if (!empty($a['files'])): ?>
-              <div class="news-card-files">
-                <?php foreach ($a['files'] as $file): ?>
-                  <a href="../data/news/<?= $nr ?>/<?= htmlspecialchars($file) ?>" target="_blank" class="news-file-link">
-                    📄 <?= htmlspecialchars($file) ?>
+              <div class="news-pdfs">
+                <?php foreach ($a['files'] as $file):
+                    $pdfUrl = '../data/news/' . $nr . '/' . rawurlencode($file);
+                ?>
+                  <a class="news-pdf-link" href="<?= $pdfUrl ?>" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    <?= htmlspecialchars($file) ?>
                   </a>
+                  <iframe class="news-pdf-embed" src="<?= $pdfUrl ?>"></iframe>
                 <?php endforeach; ?>
               </div>
             <?php endif; ?>
