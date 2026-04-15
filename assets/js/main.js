@@ -20,6 +20,19 @@ window.addEventListener('scroll', () => {
   }
 });
 
+// ===== MOBILE NAV =====
+function closeNav() {
+  document.querySelector('.nav-hamburger')?.classList.remove('active');
+  document.querySelector('.nav-links')?.classList.remove('open');
+  document.body.classList.remove('nav-open');
+}
+
+function toggleNav(btn) {
+  btn.classList.toggle('active');
+  document.querySelector('.nav-links').classList.toggle('open');
+  document.body.classList.toggle('nav-open');
+}
+
 // ===== ACTIVE NAV LINK =====
 const currentPage = window.location.pathname.split('/').pop();
 document.querySelectorAll('.nav-links a').forEach(link => {
@@ -27,6 +40,25 @@ document.querySelectorAll('.nav-links a').forEach(link => {
     link.classList.add('active');
   }
 });
+
+// ===== SCROLL-BASED SECTION ACTIVE =====
+(function () {
+  const sectionIds = ['how', 'value', 'technik'];
+  const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+  if (!sections.length) return;
+
+  function updateActiveNav() {
+    const scrollY = window.scrollY + 120;
+    let activeId = '';
+    sections.forEach(s => { if (s.offsetTop <= scrollY) activeId = s.id; });
+    document.querySelectorAll('.nav-links a[href^="#"]').forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + activeId);
+    });
+  }
+
+  window.addEventListener('scroll', updateActiveNav, { passive: true });
+  updateActiveNav();
+})();
 
 // ===== HOW-STEP ACCORDION =====
 function toggleStep(el) {
@@ -51,16 +83,32 @@ if (form) {
   form.addEventListener('submit', function(e) {
     e.preventDefault();
     const btn = form.querySelector('button[type="submit"]');
+    const msg = document.getElementById('success-msg');
+    const errMsg = document.getElementById('error-msg');
     btn.textContent = 'Wird gesendet…';
     btn.disabled = true;
+    if (msg) msg.style.display = 'none';
+    if (errMsg) errMsg.style.display = 'none';
 
-    // Simulate send (replace with real fetch/API call)
-    setTimeout(() => {
-      form.reset();
+    fetch('/api/contact.php', {
+      method: 'POST',
+      body: new FormData(form)
+    })
+    .then(r => r.json().then(data => ({ ok: r.ok, data })))
+    .then(({ ok, data }) => {
       btn.textContent = 'Anfrage senden';
       btn.disabled = false;
-      const msg = document.getElementById('success-msg');
-      if (msg) { msg.style.display = 'block'; }
-    }, 1200);
+      if (ok && data.success) {
+        form.reset();
+        if (msg) msg.style.display = 'block';
+      } else {
+        if (errMsg) errMsg.style.display = 'block';
+      }
+    })
+    .catch(() => {
+      btn.textContent = 'Anfrage senden';
+      btn.disabled = false;
+      if (errMsg) errMsg.style.display = 'block';
+    });
   });
 }

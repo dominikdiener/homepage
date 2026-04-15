@@ -1,0 +1,336 @@
+/* Admin-Panel – Minimales funktionales Styling */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f4f5f7;
+    color: #1a1a2e;
+    line-height: 1.6;
+}
+
+.admin-wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+/* ── Header ── */
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e0e0e0;
+}
+.admin-header h1 { font-size: 1.4rem; }
+.admin-header a { color: #555; text-decoration: none; font-size: .9rem; }
+.admin-header a:hover { color: #c0392b; }
+
+/* ── Login ── */
+.login-box {
+    max-width: 380px;
+    margin: 8rem auto;
+    background: #fff;
+    padding: 2.5rem 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.08);
+}
+.login-box h1 {
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+/* ── Formulare ── */
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: .3rem;
+    font-size: .9rem;
+}
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="file"],
+select,
+textarea {
+    width: 100%;
+    padding: .6rem .8rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: .95rem;
+    margin-bottom: 1rem;
+    font-family: inherit;
+}
+textarea { min-height: 200px; resize: vertical; }
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #FF6B1A;
+    box-shadow: 0 0 0 2px rgba(255,107,26,.15);
+}
+
+/* ── Buttons ── */
+.btn {
+    display: inline-block;
+    padding: .6rem 1.4rem;
+    border: none;
+    border-radius: 6px;
+    font-size: .9rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background .2s;
+}
+.btn-primary {
+    background: #FF6B1A;
+    color: #fff;
+}
+.btn-primary:hover { background: #e55a0f; }
+.btn-secondary {
+    background: #e0e0e0;
+    color: #333;
+}
+.btn-secondary:hover { background: #d0d0d0; }
+.btn-danger {
+    background: #e74c3c;
+    color: #fff;
+    font-size: .8rem;
+    padding: .4rem .8rem;
+}
+.btn-danger:hover { background: #c0392b; }
+.btn-edit {
+    background: #3498db;
+    color: #fff;
+    font-size: .8rem;
+    padding: .4rem .8rem;
+}
+.btn-edit:hover { background: #2980b9; }
+
+/* ── Tabelle ── */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 6px rgba(0,0,0,.06);
+}
+th, td {
+    padding: .7rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+th {
+    background: #fafafa;
+    font-size: .85rem;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    color: #777;
+}
+td { font-size: .9rem; }
+.actions { display: flex; gap: .4rem; }
+
+/* ── Flash-Nachrichten ── */
+.flash {
+    padding: .8rem 1rem;
+    border-radius: 6px;
+    margin-bottom: 1.5rem;
+    font-size: .9rem;
+}
+.flash-success { background: #d4edda; color: #155724; }
+.flash-error   { background: #f8d7da; color: #721c24; }
+
+/* ── Kategorie-Badges ── */
+.badge {
+    display: inline-block;
+    padding: .2rem .6rem;
+    border-radius: 4px;
+    font-size: .75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.badge-kampagne          { background: #fff3e0; color: #e65100; }
+.badge-erfahrungsbericht { background: #e0f2f1; color: #00695c; }
+.badge-messe             { background: #fff8e1; color: #f57f17; }
+
+/* ── Bild-Vorschau ── */
+.img-preview {
+    max-width: 200px;
+    max-height: 150px;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
+
+/* ── Leer-Zustand ── */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #999;
+}
+
+/* ── Admin-Navigation ── */
+.admin-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+.admin-nav-item {
+    padding: .4rem .8rem;
+    border-radius: 6px;
+    font-size: .8rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: #555;
+    background: #f0f0f0;
+    transition: background .2s;
+}
+.admin-nav-item:hover { background: #e0e0e0; }
+.admin-nav-item.active {
+    background: #FF6B1A;
+    color: #fff;
+}
+
+/* ── Sektions-Editor ── */
+.admin-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+.admin-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.section-form fieldset {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    background: #fff;
+}
+.section-form fieldset legend {
+    font-weight: 700;
+    padding: 0 .5rem;
+    font-size: .95rem;
+}
+.section-form h3 {
+    margin: 1.5rem 0 1rem;
+    font-size: 1.1rem;
+}
+.form-group {
+    margin-bottom: 1rem;
+}
+.form-group small {
+    display: block;
+    color: #888;
+    font-size: .8rem;
+    margin-top: -.5rem;
+    margin-bottom: .5rem;
+}
+.form-row {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+.form-row .form-group { flex: 1; }
+.form-actions {
+    display: flex;
+    gap: .8rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e0e0e0;
+}
+
+/* ── Repeater ── */
+.repeater-item {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 1.2rem;
+    margin-bottom: .8rem;
+}
+.repeater-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+.repeater-num {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #FF6B1A;
+}
+.repeater-inline .form-row {
+    align-items: flex-end;
+}
+.btn-sm {
+    padding: .3rem .6rem;
+    font-size: .75rem;
+}
+
+/* ── Sprach-Auswahl ── */
+.lang-select {
+    display: flex;
+    gap: .3rem;
+}
+.lang-btn {
+    padding: .3rem .6rem;
+    border-radius: 4px;
+    font-size: .8rem;
+    text-decoration: none;
+    color: #555;
+    background: #f0f0f0;
+}
+.lang-btn.active {
+    background: #FF6B1A;
+    color: #fff;
+}
+
+/* ── Icon-Picker ── */
+.icon-picker {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    margin-bottom: .5rem;
+}
+.icon-picker select {
+    flex: 1;
+    margin-bottom: 0;
+}
+.icon-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    background: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+.icon-preview svg {
+    width: 22px;
+    height: 22px;
+}
+
+/* ── Code-Textarea ── */
+textarea.code {
+    font-family: 'Courier New', monospace;
+    font-size: .85rem;
+    min-height: 100px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+    .admin-wrap { padding: 1rem; }
+    .admin-container { padding: 1rem; }
+    table { font-size: .8rem; }
+    th, td { padding: .5rem; }
+    .form-row { flex-direction: column; gap: 0; }
+    .admin-nav { gap: .3rem; }
+    .admin-nav-item { font-size: .7rem; padding: .3rem .5rem; }
+}

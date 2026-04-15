@@ -1,0 +1,12 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8082:80"
+    volumes:
+      - news-data:/var/www/html/data
+      - ./msmtprc:/etc/msmtprc:ro
+    restart: unless-stopped
+
+volumes:
+  news-data:

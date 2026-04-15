@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<meta name="description" content="News – Estrich Digital. Kampagnen, Erfahrungsberichte und Messe-Ankündigungen rund um die digitale Estrich-Feuchtemessung.">
+<title>News – Estrich Digital</title>
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+/* ── News-Seite ── */
+.news-section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 clamp(20px,4vw,60px) 80px;
+}
+
+.news-filters {
+    display: flex;
+    gap: .6rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+.news-filter-btn {
+    padding: .5rem 1.2rem;
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 100px;
+    background: transparent;
+    color: var(--grey);
+    font-family: 'Space Mono', monospace;
+    font-size: .75rem;
+    letter-spacing: .5px;
+    cursor: pointer;
+    transition: all .25s;
+}
+.news-filter-btn:hover,
+.news-filter-btn.active {
+    background: var(--orange);
+    color: #fff;
+    border-color: var(--orange);
+}
+
+.news-entry {
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 14px;
+    padding: 2rem 2.2rem;
+    margin-bottom: 2rem;
+    transition: border-color .3s;
+    scroll-margin-top: 90px;
+}
+.news-entry:hover {
+    border-color: rgba(255,107,26,.25);
+}
+.news-entry.highlight {
+    border-color: var(--orange);
+    box-shadow: 0 0 20px rgba(255,107,26,.12);
+}
+
+.news-meta {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin-bottom: .8rem;
+    flex-wrap: wrap;
+}
+.news-badge {
+    display: inline-block;
+    padding: .2rem .7rem;
+    border-radius: 4px;
+    background: rgba(255,107,26,.15);
+    color: var(--orange);
+    font-family: 'Space Mono', monospace;
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+}
+.news-date {
+    font-family: 'Space Mono', monospace;
+    font-size: .75rem;
+    color: var(--grey);
+}
+.news-author {
+    font-family: 'Space Mono', monospace;
+    font-size: .75rem;
+    color: var(--grey);
+}
+.news-nummer {
+    font-family: 'Space Mono', monospace;
+    font-size: .65rem;
+    color: var(--grey);
+    opacity: .6;
+}
+
+.news-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--light);
+    margin-bottom: .3rem;
+    line-height: 1.3;
+}
+.news-subtitle {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--orange);
+    margin-bottom: 1rem;
+    line-height: 1.4;
+}
+
+.news-text {
+    font-size: .92rem;
+    color: var(--grey);
+    line-height: 1.75;
+    white-space: pre-line;
+}
+
+.news-pdfs {
+    margin-top: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+}
+.news-pdf-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-family: 'Space Mono', monospace;
+    font-size: .8rem;
+    color: var(--orange);
+    text-decoration: none;
+    padding: .5rem .8rem;
+    border: 1px solid rgba(255,107,26,.2);
+    border-radius: 8px;
+    transition: background .2s;
+}
+.news-pdf-link:hover {
+    background: rgba(255,107,26,.08);
+}
+.news-pdf-link svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+.news-permalink {
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    font-family: 'Space Mono', monospace;
+    font-size: .65rem;
+    color: var(--grey);
+    opacity: .5;
+    text-decoration: none;
+    margin-top: .8rem;
+    transition: opacity .2s;
+}
+.news-permalink:hover {
+    opacity: 1;
+    color: var(--orange);
+}
+
+.news-empty {
+    text-align: center;
+    padding: 4rem 1rem;
+    color: var(--grey);
+}
+.news-empty p:first-child {
+    font-size: 1.1rem;
+    margin-bottom: .5rem;
+}
+
+.news-pdf-embed {
+    margin-top: 1rem;
+    width: 100%;
+    height: 500px;
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 8px;
+}
+
+@media (max-width: 600px) {
+    .news-entry { padding: 1.4rem 1.2rem; }
+    .news-pdf-embed { height: 350px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="../index.php" class="nav-logo">
+    <img src="../assets/images/logo.png" alt="Estrich Digital Logo"/>
+    <span class="nav-wordmark">ESTRICH DIGITAL</span>
+  </a>
+  <button class="nav-hamburger" onclick="toggleNav(this)" aria-label="Menü">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links">
+    <li><a href="../index.php#how" onclick="closeNav()">So funktioniert's</a></li>
+    <li><a href="../index.php#value" onclick="closeNav()">Ihr Nutzen</a></li>
+    <li><a href="../index.php#technik" onclick="closeNav()">Technik</a></li>
+    <li><a href="news.html" class="active">News</a></li>
+    <li><a href="kontakt.php" class="nav-cta">Kontakt aufnehmen</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-content">
+    <div class="section-eyebrow">News</div>
+    <h1 class="section-title" style="font-size: clamp(32px,4vw,52px);">Aktuelles von Estrich Digital</h1>
+    <p class="section-sub">Kampagnen, Erfahrungsberichte und Messe-Ankündigungen rund um die digitale Estrich-Feuchtemessung.</p>
+  </div>
+</div>
+
+<div class="news-section" id="news-container">
+  <div class="news-empty" id="news-loading">
+    <p>News werden geladen...</p>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-left">
+    <div class="footer-wordmark">ESTRICH DIGITAL</div>
+    <div class="footer-meta">Estrich Digital · Bad Laasphe · 2026 · Alle Rechte vorbehalten</div>
+  </div>
+  <div class="footer-right">
+    <a href="impressum.php">Impressum</a>
+    <a href="datenschutz.php">Datenschutz</a>
+    <a href="kontakt.php">Kontakt</a>
+  </div>
+</footer>
+
+<script src="../assets/js/main.js"></script>
+<script>
+(async function() {
+    const container = document.getElementById('news-container');
+
+    /* ── CSV laden und parsen ── */
+    let csvText;
+    try {
+        const resp = await fetch('../data/news.csv?t=' + Date.now());
+        if (!resp.ok) throw new Error();
+        csvText = await resp.text();
+    } catch {
+        container.innerHTML = '<div class="news-empty"><p>News konnten nicht geladen werden.</p></div>';
+        return;
+    }
+
+    const lines = csvText.trim().split('\n');
+    if (lines.length < 2) {
+        container.innerHTML = '<div class="news-empty"><p>Noch keine News vorhanden.</p><p>Bald finden Sie hier Kampagnen, Erfahrungsberichte und Messe-Ankündigungen.</p></div>';
+        return;
+    }
+
+    /* CSV parsen (Pipe-getrennt): nummer|datum|ersteller|kategorie|ueberschrift|unterueberschrift|langtext */
+    const allEntries = [];
+    for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+        const cols = line.split('|');
+        if (cols.length < 7) continue;
+        allEntries.push({
+            nummer:           cols[0].trim(),
+            datum:            cols[1].trim(),
+            ersteller:        cols[2].trim(),
+            kategorie:        cols[3].trim(),
+            ueberschrift:     cols[4].trim(),
+            unterueberschrift:cols[5].trim(),
+            langtext:         cols[6].trim()
+        });
+    }
+
+    /* Nur Einträge anzeigen, deren Datum heute oder älter ist */
+    function datumToDate(d) {
+        if (!d) return null;
+        /* DD.MM.YYYY */
+        const dotParts = d.split('.');
+        if (dotParts.length === 3) return new Date(dotParts[2], dotParts[1] - 1, dotParts[0]);
+        /* YYYY-MM-DD */
+        const dashParts = d.split('-');
+        if (dashParts.length === 3 && dashParts[0].length === 4) return new Date(dashParts[0], dashParts[1] - 1, dashParts[2]);
+        return null;
+    }
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+    const entries = allEntries.filter(e => {
+        const d = datumToDate(e.datum);
+        return !d || d <= today;
+    });
+
+    if (!entries.length) {
+        container.innerHTML = '<div class="news-empty"><p>Noch keine News vorhanden.</p><p>Bald finden Sie hier Kampagnen, Erfahrungsberichte und Messe-Ankündigungen.</p></div>';
+        return;
+    }
+
+    /* Datum DD.MM.YYYY in sortierbares Format umwandeln */
+    function datumToSortable(d) {
+        if (!d) return '0000-00-00';
+        // DD.MM.YYYY → YYYY-MM-DD
+        const parts = d.split('.');
+        if (parts.length === 3) return parts[2] + '-' + parts[1] + '-' + parts[0];
+        // Falls schon YYYY-MM-DD
+        return d;
+    }
+
+    /* Nach Datum sortieren (neueste zuerst) */
+    entries.sort((a, b) => datumToSortable(b.datum).localeCompare(datumToSortable(a.datum)));
+
+    /* ── PDFs pro Ordner laden ── */
+    async function loadPdfs(nummer) {
+        try {
+            const resp = await fetch('../data/news/' + nummer + '/files.json?t=' + Date.now());
+            if (!resp.ok) return [];
+            return await resp.json();
+        } catch {
+            return [];
+        }
+    }
+
+    /* ── Datum anzeigen (bleibt einfach wie in der CSV) ── */
+    function formatDate(dateStr) {
+        return dateStr || '';
+    }
+
+    /* ── SVG-Icon für PDF ── */
+    const pdfIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>';
+
+    function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    /* ── Kategorie-Filter-Buttons erstellen ── */
+    const kategorien = [...new Set(entries.map(e => e.kategorie).filter(Boolean))].sort();
+    let filterHtml = '<div class="news-filters"><button class="news-filter-btn active" data-kat="">Alle</button>';
+    for (const kat of kategorien) {
+        filterHtml += '<button class="news-filter-btn" data-kat="' + escapeHtml(kat) + '">' + escapeHtml(kat) + '</button>';
+    }
+    filterHtml += '</div>';
+
+    /* ── Einträge rendern ── */
+    let html = filterHtml;
+    for (const entry of entries) {
+        const pdfs = await loadPdfs(entry.nummer);
+
+        html += '<div class="news-entry" id="news-' + entry.nummer + '" data-kategorie="' + escapeHtml(entry.kategorie) + '">';
+
+        /* Meta-Zeile */
+        let meta = '';
+        if (entry.kategorie) meta += '<span class="news-badge">' + escapeHtml(entry.kategorie) + '</span>';
+        if (entry.datum) meta += '<span class="news-date">' + formatDate(entry.datum) + '</span>';
+        if (entry.ersteller) meta += '<span class="news-author">von ' + escapeHtml(entry.ersteller) + '</span>';
+        meta += '<span class="news-nummer">#' + entry.nummer + '</span>';
+        if (meta) html += '<div class="news-meta">' + meta + '</div>';
+
+        /* Titel */
+        if (entry.ueberschrift) html += '<h2 class="news-title">' + escapeHtml(entry.ueberschrift) + '</h2>';
+        if (entry.unterueberschrift) html += '<div class="news-subtitle">' + escapeHtml(entry.unterueberschrift) + '</div>';
+
+        /* Text */
+        if (entry.langtext) html += '<div class="news-text">' + escapeHtml(entry.langtext) + '</div>';
+
+        /* PDFs einbetten */
+        if (pdfs.length) {
+            html += '<div class="news-pdfs">';
+            for (const pdf of pdfs) {
+                const pdfUrl = '../data/news/' + entry.nummer + '/' + encodeURIComponent(pdf);
+                html += '<a class="news-pdf-link" href="' + pdfUrl + '" target="_blank">' + pdfIcon + ' ' + escapeHtml(pdf) + '</a>';
+                html += '<iframe class="news-pdf-embed" src="' + pdfUrl + '"></iframe>';
+            }
+            html += '</div>';
+        }
+
+        /* Permalink */
+        html += '<a class="news-permalink" href="#' + entry.nummer + '" title="Link zu diesem Beitrag">🔗 Link kopieren</a>';
+
+        html += '</div>';
+    }
+
+    container.innerHTML = html;
+
+    /* ── Kategorie-Filter ── */
+    container.querySelectorAll('.news-filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const kat = btn.dataset.kat;
+            container.querySelectorAll('.news-entry').forEach(card => {
+                card.style.display = (!kat || card.dataset.kategorie === kat) ? '' : 'none';
+            });
+            container.querySelectorAll('.news-filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+
+    /* ── Deep-Link: zu Eintrag scrollen ── */
+    function scrollToEntry() {
+        const hash = window.location.hash.replace('#', '');
+        if (!hash) return;
+        const el = document.getElementById('news-' + hash);
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            el.classList.add('highlight');
+            setTimeout(() => el.classList.remove('highlight'), 3000);
+        }
+    }
+    scrollToEntry();
+    window.addEventListener('hashchange', scrollToEntry);
+
+    /* ── Permalink kopieren ── */
+    container.addEventListener('click', function(e) {
+        const link = e.target.closest('.news-permalink');
+        if (link) {
+            e.preventDefault();
+            const url = window.location.origin + window.location.pathname + link.getAttribute('href');
+            navigator.clipboard.writeText(url).then(() => {
+                link.textContent = '✓ Link kopiert!';
+                setTimeout(() => { link.innerHTML = '🔗 Link kopieren'; }, 2000);
+            });
+        }
+    });
+
+})();
+</script>
+</body>
+</html>
