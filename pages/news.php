@@ -1,16 +1,44 @@
 <?php
 /**
- * Öffentliche News-Seite
+ * Öffentliche News-Seite – liest aus data/news.csv
+ * CSV-Format: nummer|datum|ersteller|kategorie|ueberschrift|unterueberschrift|langtext
  */
-$jsonFile = __DIR__ . '/../data/articles.json';
+$csvFile = __DIR__ . '/../data/news.csv';
 $articles = [];
-if (file_exists($jsonFile)) {
-    $data = json_decode(file_get_contents($jsonFile), true);
-    $articles = $data['articles'] ?? [];
+if (file_exists($csvFile)) {
+    $lines = file($csvFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    array_shift($lines); // Header überspringen
+    foreach ($lines as $line) {
+        $cols = explode('|', $line);
+        if (count($cols) < 7) continue;
+        // Dateien aus dem nummerierten Ordner laden
+        $nr = trim($cols[0]);
+        $files = [];
+        $filesJson = __DIR__ . "/../data/news/$nr/files.json";
+        if (file_exists($filesJson)) {
+            $files = json_decode(file_get_contents($filesJson), true) ?: [];
+        }
+        $articles[] = [
+            'nummer'    => $nr,
+            'date'      => trim($cols[1]),
+            'author'    => trim($cols[2]),
+            'category'  => strtolower(trim($cols[3])),
+            'title'     => trim($cols[4]),
+            'subtitle'  => trim($cols[5]),
+            'content'   => trim($cols[6]),
+            'files'     => $files,
+        ];
+    }
 }
-usort($articles, fn($a, $b) => strcmp($b['date'], $a['date']));
+// Nach Datum sortieren (neueste zuerst)
+usort($articles, function($a, $b) {
+    $da = strtotime(str_replace('.', '-', $a['date'])) ?: 0;
+    $db = strtotime(str_replace('.', '-', $b['date'])) ?: 0;
+    return $db - $da;
+});
 
 $categoryLabels = [
+    'news'              => 'News',
     'kampagne'          => 'Kampagne',
     'erfahrungsbericht' => 'Erfahrungsbericht',
     'messe'             => 'Messe',
@@ -213,35 +241,43 @@ $categoryLabels = [
     <!-- Kategorie-Filter -->
     <div class="news-filters">
         <button class="news-filter-btn active" data-category="">Alle</button>
-        <button class="news-filter-btn" data-category="kampagne">Kampagne</button>
-        <button class="news-filter-btn" data-category="erfahrungsbericht">Erfahrungsbericht</button>
-        <button class="news-filter-btn" data-category="messe">Messe</button>
+        <?php
+        $usedCats = array_unique(array_column($articles, 'category'));
+        foreach ($usedCats as $c):
+        ?>
+        <button class="news-filter-btn" data-category="<?= htmlspecialchars($c) ?>"><?= htmlspecialchars($categoryLabels[$c] ?? ucfirst($c)) ?></button>
+        <?php endforeach; ?>
     </div>
 
     <div class="news-grid">
       <?php foreach ($articles as $a):
-          $excerpt = mb_strimwidth(strip_tags($a['content']), 0, 180, '…');
-          $dateFormatted = date('d.m.Y', strtotime($a['date']));
+          $ts = strtotime(str_replace('.', '-', $a['date']));
+          $dateFormatted = $ts ? date('d.m.Y', $ts) : htmlspecialchars($a['date']);
           $cat = $a['category'];
+          $nr = $a['nummer'];
       ?>
-        <div class="news-card" data-category="<?= htmlspecialchars($cat) ?>">
-          <?php if (!empty($a['image'])): ?>
-            <img class="news-card-img" src="../uploads/<?= htmlspecialchars($a['image']) ?>" alt="<?= htmlspecialchars($a['title']) ?>">
-          <?php endif; ?>
+        <div class="news-card" id="<?= $nr ?>" data-category="<?= htmlspecialchars($cat) ?>">
           <div class="news-card-body">
             <div class="news-card-meta">
-              <span class="news-badge news-badge-<?= $cat ?>"><?= $categoryLabels[$cat] ?? $cat ?></span>
+              <span class="news-badge news-badge-<?= htmlspecialchars($cat) ?>"><?= htmlspecialchars($categoryLabels[$cat] ?? $cat) ?></span>
               <span class="news-card-date"><?= $dateFormatted ?></span>
+              <span class="news-card-author">von <?= htmlspecialchars($a['author']) ?></span>
+              <span class="news-card-nr">#<?= htmlspecialchars($nr) ?></span>
             </div>
             <h3 class="news-card-title"><?= htmlspecialchars($a['title']) ?></h3>
-            <p class="news-card-excerpt"><?= htmlspecialchars($excerpt) ?></p>
-            <button class="news-card-toggle" onclick="toggleNews(this)">
-              Weiterlesen
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div class="news-card-full">
-              <div class="news-card-full-inner"><?= $a['content'] ?></div>
-            </div>
+            <?php if (!empty($a['subtitle'])): ?>
+              <p class="news-card-subtitle"><?= htmlspecialchars($a['subtitle']) ?></p>
+            <?php endif; ?>
+            <p class="news-card-excerpt"><?= htmlspecialchars($a['content']) ?></p>
+            <?php if (!empty($a['files'])): ?>
+              <div class="news-card-files">
+                <?php foreach ($a['files'] as $file): ?>
+                  <a href="../data/news/<?= $nr ?>/<?= htmlspecialchars($file) ?>" target="_blank" class="news-file-link">
+                    📄 <?= htmlspecialchars($file) ?>
+                  </a>
+                <?php endforeach; ?>
+              </div>
+            <?php endif; ?>
           </div>
         </div>
       <?php endforeach; ?>
