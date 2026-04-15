@@ -187,13 +187,13 @@ $categoryLabels = [
 <body>
 
 <nav>
-  <a href="../index.html" class="nav-logo">
+  <a href="../index.php" class="nav-logo">
     <img src="../assets/images/logo.png" alt="Estrich Digital Logo"/>
   </a>
   <ul class="nav-links">
-    <li><a href="../index.html#how">So funktioniert's</a></li>
-    <li><a href="../index.html#value">Ihr Nutzen</a></li>
-    <li><a href="../index.html#technik">Technik</a></li>
+    <li><a href="../index.php#how">So funktioniert's</a></li>
+    <li><a href="../index.php#value">Ihr Nutzen</a></li>
+    <li><a href="../index.php#technik">Technik</a></li>
     <li><a href="news.php" class="active">News</a></li>
     <li><a href="kontakt.html" class="nav-cta">Kontakt aufnehmen</a></li>
   </ul>
