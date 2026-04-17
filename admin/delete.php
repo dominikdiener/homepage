@@ -9,11 +9,7 @@ $nr    = $_GET['nr'] ?? '';
 $token = $_GET['token'] ?? '';
 
 if ($nr && verifyCsrf($token)) {
-    $entries = loadNews();
-    $entries = array_filter($entries, fn($e) => $e['nummer'] !== $nr);
-    saveNews(array_values($entries));
-
-    // Ordner löschen
+    // Ordner mit article.json + Dateien komplett löschen
     $dir = NEWS_DIR . '/' . $nr;
     if (is_dir($dir)) {
         foreach (scandir($dir) as $f) {

@@ -32,6 +32,8 @@ define('VALID_SECTIONS', ['how', 'value', 'audiences', 'specs', 'chart', 'impres
 
 // Upload-Limits
 define('MAX_PDF_SIZE', 10 * 1024 * 1024); // 10 MB
+define('MAX_IMG_SIZE', 5 * 1024 * 1024);  // 5 MB
+define('ALLOWED_IMG_EXT', ['jpg', 'jpeg', 'png', 'webp']);
 
 /**
  * Passwort-Hash laden oder erstmalig generieren
@@ -46,19 +48,27 @@ function getPasswordHash(): string {
 }
 
 /**
- * Alle News aus CSV laden
+ * Einmalige Migration: news.csv → article.json pro Ordner
+ * Wird automatisch beim ersten Aufruf ausgeführt, wenn noch article.json fehlt.
  */
-function loadNews(): array {
-    if (!file_exists(CSV_FILE)) return [];
+function migrateNewsCsvToJson(): void {
+    if (!file_exists(CSV_FILE)) return;
     $lines = file(CSV_FILE, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    if (count($lines) < 2) return [];
+    if (count($lines) < 2) return;
 
-    $entries = [];
     for ($i = 1; $i < count($lines); $i++) {
         $cols = explode(CSV_SEPARATOR, $lines[$i]);
         if (count($cols) < 7) continue;
-        $entries[] = [
-            'nummer'            => trim($cols[0]),
+        $nr = trim($cols[0]);
+        if (!$nr) continue;
+
+        $dir = NEWS_DIR . '/' . $nr;
+        if (!is_dir($dir)) mkdir($dir, 0775, true);
+        $jsonPath = $dir . '/article.json';
+        if (file_exists($jsonPath)) continue; // schon migriert
+
+        $entry = [
+            'nummer'            => $nr,
             'datum'             => trim($cols[1]),
             'ersteller'         => trim($cols[2]),
             'kategorie'         => trim($cols[3] ?? ''),
@@ -66,29 +76,81 @@ function loadNews(): array {
             'unterueberschrift' => trim($cols[5] ?? ''),
             'langtext'          => trim($cols[6] ?? ''),
         ];
+        file_put_contents($jsonPath, json_encode($entry, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
     }
+
+    // CSV in Archiv umbenennen (nicht löschen - Sicherheit)
+    @rename(CSV_FILE, CSV_FILE . '.migrated-' . date('Ymd-His'));
+}
+
+/**
+ * Alle News aus article.json pro Ordner laden
+ */
+function loadNews(): array {
+    // Einmalige Migration bei Bedarf
+    if (file_exists(CSV_FILE)) {
+        migrateNewsCsvToJson();
+    }
+
+    if (!is_dir(NEWS_DIR)) return [];
+
+    $entries = [];
+    foreach (scandir(NEWS_DIR) as $f) {
+        if ($f === '.' || $f === '..') continue;
+        $dir = NEWS_DIR . '/' . $f;
+        if (!is_dir($dir)) continue;
+        $jsonPath = $dir . '/article.json';
+        if (!file_exists($jsonPath)) continue;
+
+        $entry = json_decode(file_get_contents($jsonPath), true);
+        if (!is_array($entry)) continue;
+
+        // Pflichtfelder absichern
+        $entry['nummer']            = (string) ($entry['nummer'] ?? $f);
+        $entry['datum']             = $entry['datum']             ?? '';
+        $entry['ersteller']         = $entry['ersteller']         ?? '';
+        $entry['kategorie']         = $entry['kategorie']         ?? '';
+        $entry['ueberschrift']      = $entry['ueberschrift']      ?? '';
+        $entry['unterueberschrift'] = $entry['unterueberschrift'] ?? '';
+        $entry['langtext']          = $entry['langtext']          ?? '';
+
+        $entries[] = $entry;
+    }
+
+    // Nach Nummer sortieren
+    usort($entries, fn($a, $b) => (int) $a['nummer'] - (int) $b['nummer']);
     return $entries;
 }
 
 /**
- * News in CSV speichern
+ * Einen einzelnen Eintrag als article.json speichern
+ */
+function saveNewsEntry(array $entry): void {
+    $nr = (string) ($entry['nummer'] ?? '');
+    if (!$nr) return;
+    $dir = NEWS_DIR . '/' . $nr;
+    if (!is_dir($dir)) mkdir($dir, 0775, true);
+
+    $payload = [
+        'nummer'            => $nr,
+        'datum'             => $entry['datum']             ?? '',
+        'ersteller'         => $entry['ersteller']         ?? '',
+        'kategorie'         => $entry['kategorie']         ?? '',
+        'ueberschrift'      => $entry['ueberschrift']      ?? '',
+        'unterueberschrift' => $entry['unterueberschrift'] ?? '',
+        'langtext'          => $entry['langtext']          ?? '',
+    ];
+    file_put_contents($dir . '/article.json', json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+}
+
+/**
+ * Alle Einträge speichern (API-kompatibel zur alten CSV-Variante)
+ * Schreibt jedes Element als article.json in seinen Ordner.
  */
 function saveNews(array $entries): void {
-    $header = 'nummer' . CSV_SEPARATOR . 'datum' . CSV_SEPARATOR . 'ersteller' . CSV_SEPARATOR . 'kategorie' . CSV_SEPARATOR . 'ueberschrift' . CSV_SEPARATOR . 'unterueberschrift' . CSV_SEPARATOR . 'langtext';
-    $lines = [$header];
     foreach ($entries as $e) {
-        // Pipes im Text durch Ersatzzeichen ersetzen
-        $lines[] = implode(CSV_SEPARATOR, [
-            $e['nummer'],
-            $e['datum'],
-            str_replace('|', '/', $e['ersteller']),
-            str_replace('|', '/', $e['kategorie'] ?? ''),
-            str_replace('|', '/', $e['ueberschrift']),
-            str_replace('|', '/', $e['unterueberschrift']),
-            str_replace(["|", "\n", "\r"], ['/', ' ', ''], $e['langtext']),
-        ]);
+        saveNewsEntry($e);
     }
-    file_put_contents(CSV_FILE, implode("\n", $lines) . "\n", LOCK_EX);
 }
 
 /**
@@ -139,6 +201,31 @@ function updateFilesJson(string $nummer): void {
     if (!is_dir($dir)) return;
     $pdfs = listPdfs($nummer);
     file_put_contents($dir . '/files.json', json_encode($pdfs, JSON_UNESCAPED_UNICODE), LOCK_EX);
+}
+
+/**
+ * Vorschaubild eines News-Eintrags finden (preview-desktop.* oder preview-mobile.*)
+ */
+function findPreviewImage(string $nummer, string $type = 'desktop'): ?string {
+    $dir = NEWS_DIR . '/' . $nummer;
+    if (!is_dir($dir)) return null;
+    foreach (ALLOWED_IMG_EXT as $ext) {
+        $file = "preview-{$type}.{$ext}";
+        if (file_exists($dir . '/' . $file)) return $file;
+    }
+    return null;
+}
+
+/**
+ * Vorschaubild löschen (alle Erweiterungen)
+ */
+function deletePreviewImage(string $nummer, string $type): void {
+    $dir = NEWS_DIR . '/' . $nummer;
+    if (!is_dir($dir)) return;
+    foreach (ALLOWED_IMG_EXT as $ext) {
+        $path = $dir . "/preview-{$type}.{$ext}";
+        if (file_exists($path)) unlink($path);
+    }
 }
 
 /* ══════════════════════════════════════════

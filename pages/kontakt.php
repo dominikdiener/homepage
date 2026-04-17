@@ -24,7 +24,7 @@
     <li><a href="../index.php#how" onclick="closeNav()"><?= e($ui['nav']['how'] ?? "So funktioniert's") ?></a></li>
     <li><a href="../index.php#value" onclick="closeNav()"><?= e($ui['nav']['value'] ?? 'Ihr Nutzen') ?></a></li>
     <li><a href="../index.php#technik" onclick="closeNav()"><?= e($ui['nav']['technik'] ?? 'Technik') ?></a></li>
-    <li><a href="news.php" onclick="closeNav()"><?= e($ui['nav']['news'] ?? 'News') ?></a></li>
+    <li><a href="/news" onclick="closeNav()"><?= e($ui['nav']['news'] ?? 'News') ?></a></li>
     <?= renderLangSwitcher() ?>
     <li><a href="kontakt.php" class="nav-cta"><?= e($ui['nav']['kontakt'] ?? 'Kontakt aufnehmen') ?></a></li>
   </ul>
@@ -75,14 +75,14 @@
     </div>
 
     <div style="margin-top: 40px; padding: 24px; background: var(--teal-dim); border: 1px solid rgba(26,122,110,0.3); border-radius: 14px;">
-      <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:1.5px; color:var(--teal); text-transform:uppercase; margin-bottom:10px;">Schnelle Antwort</div>
+      <div style="font-family:var(--font-mono); font-size:11px; letter-spacing:1.5px; color:var(--teal); text-transform:uppercase; margin-bottom:10px;">Schnelle Antwort</div>
       <p style="font-size:14px; color:var(--grey); line-height:1.65;"><?= e($kontakt['responseNote'] ?? '') ?></p>
     </div>
   </div>
 
   <!-- RIGHT: Form -->
   <div class="form-card">
-    <div style="font-family:'Space Mono',monospace; font-size:11px; letter-spacing:2px; color:var(--orange); text-transform:uppercase; margin-bottom:28px;">Anfrage senden</div>
+    <div style="font-family:var(--font-mono); font-size:11px; letter-spacing:2px; color:var(--orange); text-transform:uppercase; margin-bottom:28px;">Anfrage senden</div>
 
     <form id="contact-form">
       <div class="form-row">

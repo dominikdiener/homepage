@@ -1,4 +1,22 @@
-<?php require_once __DIR__ . '/includes/content.php'; $lang = getCurrentLang(); $ui = loadUI($lang); ?>
+<?php
+require_once __DIR__ . '/includes/content.php';
+$lang = getCurrentLang();
+$ui   = loadUI($lang);
+
+/**
+ * Aus einem Bildpfad in assets/images/ den dazugehörigen Thumbnail-Pfad
+ * in assets/images/thumbs/<name>-thumb.jpg ableiten.
+ * Existiert der Thumbnail nicht, wird das Original zurückgegeben.
+ */
+function thumbPath(string $orig): string {
+    if (!preg_match('#^(.*assets/images/)([^/]+)\.(jpe?g|png|webp)$#i', $orig, $m)) {
+        return $orig;
+    }
+    $thumbRel = $m[1] . 'thumbs/' . pathinfo($m[2], PATHINFO_FILENAME) . '-thumb.jpg';
+    $thumbAbs = __DIR__ . '/' . ltrim($thumbRel, '/');
+    return file_exists($thumbAbs) ? $thumbRel : $orig;
+}
+?>
 <!DOCTYPE html>
 <html lang="<?= e($lang) ?>">
 <head>
@@ -8,7 +26,6 @@
 <meta name="description" content="Estrich Digital – Der digitale Nachweis für trockenen Estrich. IoT-Feuchtemessung direkt im Estrich, manipulationssicher und rechtssicher dokumentiert.">
 <title>Estrich Digital – Der digitale Nachweis für trockenen Estrich</title>
 <link rel="stylesheet" href="assets/css/main.css">
-<?= renderCustomCSS($lang) ?>
 <style>
   /* ===== HERO ===== */
   .hero {
@@ -48,8 +65,8 @@
     border: 1px solid rgba(255,107,26,0.3);
     border-radius: 20px;
     padding: 6px 16px;
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-eyebrow);
     font-weight: 700;
     color: var(--orange);
     letter-spacing: 1.5px;
@@ -67,7 +84,7 @@
   }
 
   .hero-h1 {
-    font-size: clamp(36px, 4.5vw, 60px);
+    font-size: var(--fs-hero-title);
     font-weight: 700;
     line-height: 1.1;
     letter-spacing: -1px;
@@ -79,7 +96,7 @@
   .hero-h1 em { font-style: normal; color: var(--orange); }
 
   .hero-sub {
-    font-size: 18px;
+    font-size: var(--fs-hero-sub);
     font-weight: 300;
     line-height: 1.7;
     color: var(--grey);
@@ -135,7 +152,7 @@
   .how-step:hover { background: var(--mid2); }
 
   .how-step-num {
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 64px;
     font-weight: 700;
     color: rgba(255,107,26,0.07);
@@ -153,8 +170,8 @@
     border: 1px solid rgba(255,107,26,0.25);
     border-radius: 16px;
     padding: 3px 12px;
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
     font-weight: 700;
     color: var(--orange);
     letter-spacing: 1px;
@@ -163,13 +180,13 @@
   }
 
   .how-step h3 {
-    font-size: 20px;
+    font-size: var(--fs-card-title);
     font-weight: 700;
     margin-bottom: 8px;
   }
 
   .how-step p {
-    font-size: 15px;
+    font-size: var(--fs-card-text);
     color: var(--grey);
     line-height: 1.65;
   }
@@ -236,7 +253,7 @@
   }
 
   .how-step-detail-text {
-    font-size: 14px;
+    font-size: var(--fs-card-text);
     color: var(--grey);
     line-height: 1.7;
     margin-bottom: 20px;
@@ -349,13 +366,13 @@
   }
 
   .value-card h3 {
-    font-size: 19px;
+    font-size: var(--fs-card-title);
     font-weight: 700;
     margin-bottom: 10px;
   }
 
   .value-card p {
-    font-size: 15px;
+    font-size: var(--fs-card-text);
     color: var(--grey);
     line-height: 1.7;
   }
@@ -397,8 +414,8 @@
   .audience-card:hover::after { opacity: 0.12; }
 
   .audience-label {
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
     letter-spacing: 2px;
     text-transform: uppercase;
     margin-bottom: 14px;
@@ -408,8 +425,8 @@
   .audience-card.gu  .audience-label { color: var(--orange); }
   .audience-card.her .audience-label { color: var(--teal); }
 
-  .audience-card h3 { font-size: 24px; font-weight: 700; margin-bottom: 14px; line-height: 1.25; }
-  .audience-card p  { font-size: 16px; color: var(--grey); line-height: 1.7; margin-bottom: 28px; }
+  .audience-card h3 { font-size: var(--fs-card-title); font-weight: 700; margin-bottom: 14px; line-height: 1.25; }
+  .audience-card p  { font-size: var(--fs-card-text); color: var(--grey); line-height: 1.7; margin-bottom: 28px; }
 
   .benefits { list-style: none; display: flex; flex-direction: column; gap: 10px; }
 
@@ -417,14 +434,14 @@
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    font-size: 14px;
+    font-size: var(--fs-card-text);
     color: var(--light);
     opacity: 0.85;
   }
 
   .benefits li span.check {
-    font-family: 'Space Mono', monospace;
-    font-size: 12px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
     margin-top: 2px;
     flex-shrink: 0;
   }
@@ -455,14 +472,14 @@
   .spec-item:hover { background: var(--mid2); }
 
   .spec-value {
-    font-family: 'Space Mono', monospace;
-    font-size: 26px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-spec-value);
     font-weight: 700;
     color: var(--orange);
     margin-bottom: 6px;
   }
 
-  .spec-label { font-size: 13px; color: var(--grey); line-height: 1.4; }
+  .spec-label { font-size: var(--fs-spec-label); color: var(--grey); line-height: 1.4; }
 
   /* ===== CHART ===== */
   .chart-wrap-outer { padding: 0 64px 96px; }
@@ -488,8 +505,8 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-family: 'Space Mono', monospace;
-    font-size: 10px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
     color: var(--grey);
   }
 
@@ -519,6 +536,76 @@
   .cta-section .section-sub { margin: 0 auto 40px; }
 
   .cta-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+  .cta-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: left;
+  }
+
+  .cta-card {
+    padding: 36px 32px;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    transition: border-color .3s, transform .3s;
+    cursor: pointer;
+  }
+  .cta-card:hover { transform: translateY(-2px); }
+
+  .cta-card--info {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .cta-card--info:hover { border-color: rgba(26,122,110,0.4); }
+
+  .cta-card--action {
+    background: rgba(255,107,26,0.06);
+    border: 1px solid rgba(255,107,26,0.2);
+  }
+  .cta-card--action:hover { border-color: rgba(255,107,26,0.5); }
+
+  .cta-card-eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--fs-eyebrow);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .cta-card--info .cta-card-eyebrow { color: var(--teal); }
+  .cta-card--action .cta-card-eyebrow { color: var(--orange); }
+
+  .cta-card h3 {
+    font-size: var(--fs-card-title);
+    font-weight: 600;
+    color: var(--light);
+    line-height: 1.35;
+  }
+
+  .cta-card p {
+    font-size: var(--fs-card-text);
+    color: var(--grey);
+    line-height: 1.65;
+    flex: 1;
+  }
+
+  .cta-card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-card-text);
+    font-weight: 600;
+    text-decoration: none;
+    transition: gap .2s;
+  }
+  .cta-card-link:hover { gap: 12px; }
+  .cta-card--info .cta-card-link { color: var(--teal); }
+  .cta-card--action .cta-card-link { color: var(--orange); }
 
   /* ===== MOBILE ===== */
   @media (max-width: 768px) {
@@ -569,8 +656,11 @@
     .chart-header { flex-direction: column; align-items: flex-start; }
 
     .cta-section { padding: 50px 20px; }
+    .cta-cards { grid-template-columns: 1fr; }
+    .cta-card { padding: 28px 24px; }
   }
 </style>
+<?= renderCustomCSS($lang) ?>
 </head>
 <body>
 <?= renderPreviewBanner() ?>
@@ -587,7 +677,7 @@
     <li><a href="#how" onclick="closeNav()"><?= e($ui['nav']['how'] ?? "So funktioniert's") ?></a></li>
     <li><a href="#value" onclick="closeNav()"><?= e($ui['nav']['value'] ?? 'Ihr Nutzen') ?></a></li>
     <li><a href="#technik" onclick="closeNav()"><?= e($ui['nav']['technik'] ?? 'Technik') ?></a></li>
-    <li><a href="pages/news.html"><?= e($ui['nav']['news'] ?? 'News') ?></a></li>
+    <li><a href="/news"><?= e($ui['nav']['news'] ?? 'News') ?></a></li>
     <?= renderLangSwitcher() ?>
     <li><a href="pages/kontakt.php" class="nav-cta"><?= e($ui['nav']['kontakt'] ?? 'Kontakt aufnehmen') ?></a></li>
   </ul>
@@ -659,10 +749,10 @@
           <?php if (!empty($step['image1']) || !empty($step['image2'])): ?>
           <div class="how-step-images">
             <?php if (!empty($step['image1'])): ?>
-            <img src="<?= e($step['image1']) ?>" alt="<?= e($step['image1Alt'] ?? '') ?>">
+            <img src="<?= e(thumbPath($step['image1'])) ?>" data-full="<?= e($step['image1']) ?>" alt="<?= e($step['image1Alt'] ?? '') ?>" loading="lazy">
             <?php endif; ?>
             <?php if (!empty($step['image2'])): ?>
-            <img src="<?= e($step['image2']) ?>" alt="<?= e($step['image2Alt'] ?? '') ?>">
+            <img src="<?= e(thumbPath($step['image2'])) ?>" data-full="<?= e($step['image2']) ?>" alt="<?= e($step['image2Alt'] ?? '') ?>" loading="lazy">
             <?php endif; ?>
           </div>
           <?php endif; ?>
@@ -738,7 +828,7 @@
     <div class="chart-header">
       <div>
         <div class="section-eyebrow"><?= e($chart['sectionEyebrow'] ?? 'Verlaufsdaten · Beispiel') ?></div>
-        <div style="font-size:18px;font-weight:700;"><?= e($chart['headerTitle'] ?? 'Feuchte & Temperatur über Zeit') ?></div>
+        <div style="font-size:var(--fs-section-sub);font-weight:700;"><?= e($chart['headerTitle'] ?? 'Feuchte & Temperatur über Zeit') ?></div>
       </div>
       <div class="chart-legend">
         <?php foreach (($chart['legend'] ?? []) as $item): ?>
@@ -802,12 +892,22 @@
 
 <!-- CTA -->
 <section class="cta-section">
-  <div class="section-eyebrow reveal">Jetzt starten</div>
-  <h2 class="section-title reveal">Bereit für den digitalen<br>Trocknungsnachweis?</h2>
-  <p class="section-sub reveal">Sprechen Sie mit uns über Pilotprojekte, Systemintegration oder eine Demo vor Ort.</p>
-  <div class="cta-actions reveal">
-    <a href="pages/kontakt.php" class="btn-primary"><?= e($ui['nav']['kontakt'] ?? 'Kontakt aufnehmen') ?></a>
-    <a href="#how" class="btn-secondary">Nochmal durchlesen</a>
+  <div class="section-eyebrow reveal">Wie geht es weiter?</div>
+  <h2 class="section-title reveal">Bereit für den nächsten Schritt?</h2>
+  <p class="section-sub reveal">Ob Sie sich erst informieren oder direkt starten möchten – wir sind für Sie da.</p>
+  <div class="cta-cards reveal">
+    <div class="cta-card cta-card--info" onclick="window.location.href='/news'">
+      <div class="cta-card-eyebrow">Informieren</div>
+      <h3>Erst mal reinlesen?</h3>
+      <p>Erfahrungsberichte, Kampagnen und Neuigkeiten rund um die digitale Estrich-Feuchtemessung.</p>
+      <a href="/news" class="cta-card-link">News lesen <span>&rarr;</span></a>
+    </div>
+    <div class="cta-card cta-card--action" onclick="window.location.href='pages/kontakt.php'">
+      <div class="cta-card-eyebrow">Starten</div>
+      <h3>Direkt loslegen?</h3>
+      <p>Sprechen Sie mit uns über Pilotprojekte, Systemintegration oder eine Demo vor Ort.</p>
+      <a href="pages/kontakt.php" class="cta-card-link">Kontakt aufnehmen <span>&rarr;</span></a>
+    </div>
   </div>
 </section>
 
@@ -849,11 +949,12 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closeLightbox();
 });
 
-// Alle Schritte-Bilder klickbar machen
+// Alle Schritte-Bilder klickbar machen – beim Klick Original aus data-full laden,
+// Thumbnail bleibt als src für die Ansicht auf der Startseite.
 document.querySelectorAll('.how-step-images img').forEach(function(img) {
   img.addEventListener('click', function(e) {
     e.stopPropagation();
-    openLightbox(this.src);
+    openLightbox(this.dataset.full || this.src);
   });
 });
 </script>

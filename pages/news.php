@@ -1,16 +1,27 @@
 <?php
 /**
- * Öffentliche News-Seite
+ * Öffentliche News-Seite – liest data/news/<nr>/article.json
+ * Langtext wird als Markdown gespeichert und serverseitig mit Parsedown gerendert.
  */
-$jsonFile = __DIR__ . '/../data/articles.json';
-$articles = [];
-if (file_exists($jsonFile)) {
-    $data = json_decode(file_get_contents($jsonFile), true);
-    $articles = $data['articles'] ?? [];
+require_once __DIR__ . '/../includes/content.php';
+require_once __DIR__ . '/../includes/news.php';
+require_once __DIR__ . '/../includes/lib/Parsedown.php';
+$lang = getCurrentLang();
+
+$parsedown = new Parsedown();
+$parsedown->setSafeMode(true); // HTML im Markdown wird escaped → XSS-Schutz
+
+// Zentrale News-Quelle inkl. SEO-Slug + Sortierung (siehe includes/news.php)
+$articles = loadPublicNews();
+
+// Langtext serverseitig zu HTML rendern (Parsedown SafeMode)
+foreach ($articles as &$a) {
+    $a['contentHtml'] = $a['content'] !== '' ? $parsedown->text($a['content']) : '';
 }
-usort($articles, fn($a, $b) => strcmp($b['date'], $a['date']));
+unset($a);
 
 $categoryLabels = [
+    'news'              => 'News',
     'kampagne'          => 'Kampagne',
     'erfahrungsbericht' => 'Erfahrungsbericht',
     'messe'             => 'Messe',
@@ -23,11 +34,11 @@ $categoryLabels = [
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="News – Estrich Digital. Kampagnen, Erfahrungsberichte und Messe-Ankündigungen rund um die digitale Estrich-Feuchtemessung.">
 <title>News – Estrich Digital</title>
-<link rel="stylesheet" href="../assets/css/main.css">
+<link rel="stylesheet" href="/assets/css/main.css">
 <style>
 /* ── News-spezifisches Styling ── */
 .news-section {
-    padding: 0 64px 80px;
+    padding: 2.5rem 64px 80px;
 }
 
 .news-filters {
@@ -42,7 +53,7 @@ $categoryLabels = [
     border-radius: 100px;
     background: transparent;
     color: var(--grey);
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
     font-size: .75rem;
     letter-spacing: .5px;
     text-transform: uppercase;
@@ -57,12 +68,13 @@ $categoryLabels = [
 }
 
 .news-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    display: flex;
+    flex-direction: column;
     gap: 1.8rem;
 }
 
 .news-card {
+    width: 100%;
     background: rgba(255,255,255,.04);
     border: 1px solid rgba(255,255,255,.08);
     border-radius: 14px;
@@ -96,7 +108,7 @@ $categoryLabels = [
     display: inline-block;
     padding: .2rem .6rem;
     border-radius: 4px;
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
     font-size: .65rem;
     font-weight: 700;
     letter-spacing: .5px;
@@ -107,7 +119,7 @@ $categoryLabels = [
 .news-badge-messe             { background: rgba(255,209,102,.15); color: var(--accent); }
 
 .news-card-date {
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
     font-size: .7rem;
     color: var(--grey);
 }
@@ -119,6 +131,28 @@ $categoryLabels = [
     margin-bottom: .6rem;
     line-height: 1.35;
 }
+.news-card-title a {
+    color: inherit;
+    text-decoration: none;
+    transition: color .2s;
+}
+.news-card-title a:hover { color: var(--orange); }
+
+.news-card-permalink {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    margin-top: 1rem;
+    font-family: var(--font-mono);
+    font-size: .78rem;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    color: var(--orange);
+    text-decoration: none;
+    transition: gap .2s, opacity .2s;
+}
+.news-card-permalink:hover { gap: .75rem; opacity: .85; }
+.news-card-permalink svg { width: 14px; height: 14px; }
 
 .news-card-excerpt {
     font-size: .88rem;
@@ -126,12 +160,61 @@ $categoryLabels = [
     line-height: 1.6;
     margin-bottom: 1rem;
 }
+/* Markdown-Elemente im Excerpt */
+.news-card-excerpt > *:first-child { margin-top: 0; }
+.news-card-excerpt > *:last-child  { margin-bottom: 0; }
+.news-card-excerpt p { margin: 0 0 .7rem; }
+.news-card-excerpt h1,
+.news-card-excerpt h2,
+.news-card-excerpt h3 {
+    color: var(--light);
+    margin: 1rem 0 .5rem;
+    font-weight: 600;
+    line-height: 1.3;
+}
+.news-card-excerpt h1 { font-size: 1.15rem; }
+.news-card-excerpt h2 { font-size: 1.05rem; }
+.news-card-excerpt h3 { font-size: .95rem; }
+.news-card-excerpt strong { color: var(--light); font-weight: 600; }
+.news-card-excerpt em { font-style: italic; }
+.news-card-excerpt ul,
+.news-card-excerpt ol {
+    margin: .4rem 0 .8rem;
+    padding-left: 1.3rem;
+}
+.news-card-excerpt li { margin-bottom: .2rem; }
+.news-card-excerpt a {
+    color: var(--orange);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,107,26,.35);
+    transition: border-color .2s;
+}
+.news-card-excerpt a:hover { border-color: var(--orange); }
+.news-card-excerpt blockquote {
+    margin: .6rem 0;
+    padding: .3rem 0 .3rem 1rem;
+    border-left: 3px solid rgba(255,107,26,.4);
+    color: var(--grey);
+    font-style: italic;
+}
+.news-card-excerpt hr {
+    border: none;
+    border-top: 1px solid rgba(255,255,255,.08);
+    margin: 1rem 0;
+}
+.news-card-excerpt code {
+    background: rgba(255,255,255,.06);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: .85em;
+}
 
 .news-card-toggle {
     display: inline-flex;
     align-items: center;
     gap: .4rem;
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
     font-size: .75rem;
     color: var(--orange);
     cursor: pointer;
@@ -168,6 +251,56 @@ $categoryLabels = [
 .news-card-full-inner ul,
 .news-card-full-inner ol  { padding-left: 1.2rem; margin-bottom: .8rem; }
 
+.news-pdfs {
+    margin-top: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+}
+.news-pdf-link {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-family: var(--font-mono);
+    font-size: .8rem;
+    color: var(--orange);
+    text-decoration: none;
+    padding: .5rem .8rem;
+    border: 1px solid rgba(255,107,26,.2);
+    border-radius: 8px;
+    transition: background .2s;
+}
+.news-pdf-link:hover { background: rgba(255,107,26,.08); }
+.news-pdf-link svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+.news-pdf-embed {
+    width: 100%;
+    height: 500px;
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 8px;
+}
+
+.news-preview-img {
+    width: 100%;
+    border-radius: 8px;
+    margin-top: .8rem;
+    border: 1px solid rgba(255,255,255,.08);
+}
+.news-preview-desktop { display: block; }
+.news-preview-mobile  { display: none; }
+
+.news-card-subtitle {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--orange);
+    margin-bottom: .6rem;
+}
+.news-card-author, .news-card-nr {
+    font-family: var(--font-mono);
+    font-size: .7rem;
+    color: var(--grey);
+}
+
 .news-empty {
     text-align: center;
     padding: 4rem 1rem;
@@ -179,23 +312,30 @@ $categoryLabels = [
 }
 
 @media (max-width: 768px) {
-    .news-section { padding: 0 20px 50px; }
-    .news-grid { grid-template-columns: 1fr; }
+    .news-section { padding: 1.5rem 20px 50px; }
+    .news-pdf-embed { display: none; }
+    .news-preview-desktop { display: none; }
+    .news-preview-mobile  { display: block; }
 }
 </style>
+<?= renderCustomCSS($lang) ?>
 </head>
 <body>
+<?= renderPreviewBanner() ?>
 
 <nav>
-  <a href="../index.html" class="nav-logo">
-    <img src="../assets/images/logo.png" alt="Estrich Digital Logo"/>
+  <a href="/index.php" class="nav-logo">
+    <img src="/assets/images/logo.png" alt="Estrich Digital Logo"/>
   </a>
+  <button class="nav-hamburger" onclick="toggleNav(this)" aria-label="Menü">
+    <span></span><span></span><span></span>
+  </button>
   <ul class="nav-links">
-    <li><a href="../index.html#how">So funktioniert's</a></li>
-    <li><a href="../index.html#value">Ihr Nutzen</a></li>
-    <li><a href="../index.html#technik">Technik</a></li>
-    <li><a href="news.php" class="active">News</a></li>
-    <li><a href="kontakt.html" class="nav-cta">Kontakt aufnehmen</a></li>
+    <li><a href="/index.php#how">So funktioniert's</a></li>
+    <li><a href="/index.php#value">Ihr Nutzen</a></li>
+    <li><a href="/index.php#technik">Technik</a></li>
+    <li><a href="/news" class="active">News</a></li>
+    <li><a href="/pages/kontakt.php" class="nav-cta">Kontakt aufnehmen</a></li>
   </ul>
 </nav>
 
@@ -213,35 +353,68 @@ $categoryLabels = [
     <!-- Kategorie-Filter -->
     <div class="news-filters">
         <button class="news-filter-btn active" data-category="">Alle</button>
-        <button class="news-filter-btn" data-category="kampagne">Kampagne</button>
-        <button class="news-filter-btn" data-category="erfahrungsbericht">Erfahrungsbericht</button>
-        <button class="news-filter-btn" data-category="messe">Messe</button>
+        <?php
+        $usedCats = array_unique(array_column($articles, 'category'));
+        foreach ($usedCats as $c):
+        ?>
+        <button class="news-filter-btn" data-category="<?= htmlspecialchars($c) ?>"><?= htmlspecialchars($categoryLabels[$c] ?? ucfirst($c)) ?></button>
+        <?php endforeach; ?>
     </div>
 
     <div class="news-grid">
       <?php foreach ($articles as $a):
-          $excerpt = mb_strimwidth(strip_tags($a['content']), 0, 180, '…');
-          $dateFormatted = date('d.m.Y', strtotime($a['date']));
+          $ts = strtotime(str_replace('.', '-', $a['date']));
+          $dateFormatted = $ts ? date('d.m.Y', $ts) : htmlspecialchars($a['date']);
           $cat = $a['category'];
+          $nr = $a['nummer'];
       ?>
-        <div class="news-card" data-category="<?= htmlspecialchars($cat) ?>">
-          <?php if (!empty($a['image'])): ?>
-            <img class="news-card-img" src="../uploads/<?= htmlspecialchars($a['image']) ?>" alt="<?= htmlspecialchars($a['title']) ?>">
-          <?php endif; ?>
+        <div class="news-card" id="<?= $nr ?>" data-category="<?= htmlspecialchars($cat) ?>">
           <div class="news-card-body">
             <div class="news-card-meta">
-              <span class="news-badge news-badge-<?= $cat ?>"><?= $categoryLabels[$cat] ?? $cat ?></span>
+              <span class="news-badge news-badge-<?= htmlspecialchars($cat) ?>"><?= htmlspecialchars($categoryLabels[$cat] ?? $cat) ?></span>
               <span class="news-card-date"><?= $dateFormatted ?></span>
+              <span class="news-card-author">von <?= htmlspecialchars($a['author']) ?></span>
+              <span class="news-card-nr">#<?= htmlspecialchars($nr) ?></span>
             </div>
-            <h3 class="news-card-title"><?= htmlspecialchars($a['title']) ?></h3>
-            <p class="news-card-excerpt"><?= htmlspecialchars($excerpt) ?></p>
-            <button class="news-card-toggle" onclick="toggleNews(this)">
-              Weiterlesen
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-            </button>
-            <div class="news-card-full">
-              <div class="news-card-full-inner"><?= $a['content'] ?></div>
-            </div>
+            <h3 class="news-card-title">
+              <a href="<?= htmlspecialchars(newsUrl($a)) ?>"><?= htmlspecialchars($a['title']) ?></a>
+            </h3>
+            <?php if (!empty($a['subtitle'])): ?>
+              <p class="news-card-subtitle"><?= htmlspecialchars($a['subtitle']) ?></p>
+            <?php endif; ?>
+            <?php if (!empty($a['contentHtml'])): ?>
+              <div class="news-card-excerpt"><?= $a['contentHtml'] /* Parsedown SafeMode aktiv → eingebettetes HTML ist escaped */ ?></div>
+            <?php endif; ?>
+            <a class="news-card-permalink" href="<?= htmlspecialchars(newsUrl($a)) ?>">
+              Zum Beitrag
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+            </a>
+            <?php
+              $hasPreviewDesktop = !empty($a['previewDesktop']);
+              $hasPreviewMobile  = !empty($a['previewMobile']);
+              $baseUrl = '/data/news/' . $nr . '/';
+            ?>
+            <?php if ($hasPreviewDesktop): ?>
+              <img class="news-preview-img news-preview-desktop" src="<?= $baseUrl . rawurlencode($a['previewDesktop']) ?>" alt="<?= htmlspecialchars($a['title']) ?>">
+            <?php endif; ?>
+            <?php if ($hasPreviewMobile): ?>
+              <img class="news-preview-img news-preview-mobile" src="<?= $baseUrl . rawurlencode($a['previewMobile']) ?>" alt="<?= htmlspecialchars($a['title']) ?>">
+            <?php endif; ?>
+            <?php if (!empty($a['files'])): ?>
+              <div class="news-pdfs">
+                <?php foreach ($a['files'] as $file):
+                    $pdfUrl = $baseUrl . rawurlencode($file);
+                ?>
+                  <a class="news-pdf-link" href="<?= $pdfUrl ?>" target="_blank">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    <?= htmlspecialchars($file) ?>
+                  </a>
+                  <?php if (!$hasPreviewDesktop): ?>
+                    <iframe class="news-pdf-embed" data-src="<?= $pdfUrl ?>"></iframe>
+                  <?php endif; ?>
+                <?php endforeach; ?>
+              </div>
+            <?php endif; ?>
           </div>
         </div>
       <?php endforeach; ?>
@@ -261,13 +434,13 @@ $categoryLabels = [
     <div class="footer-meta">Estrich Digital · Bad Laasphe · 2026 · Alle Rechte vorbehalten</div>
   </div>
   <div class="footer-right">
-    <a href="impressum.html">Impressum</a>
-    <a href="datenschutz.html">Datenschutz</a>
-    <a href="kontakt.html">Kontakt</a>
+    <a href="/pages/impressum.php">Impressum</a>
+    <a href="/pages/datenschutz.php">Datenschutz</a>
+    <a href="/pages/kontakt.php">Kontakt</a>
   </div>
 </footer>
 
-<script src="../assets/js/main.js"></script>
+<script src="/assets/js/main.js"></script>
 <script>
 /* Kategorie-Filter */
 document.querySelectorAll('.news-filter-btn').forEach(btn => {
@@ -296,6 +469,13 @@ function toggleNews(el) {
         card.classList.add('open');
         el.firstChild.textContent = 'Weniger';
     }
+}
+
+/* PDF-Vorschau nur auf Desktop laden */
+if (window.innerWidth > 768) {
+    document.querySelectorAll('.news-pdf-embed[data-src]').forEach(function(iframe) {
+        iframe.src = iframe.dataset.src;
+    });
 }
 </script>
 </body>

@@ -23,7 +23,7 @@
     <li><a href="../index.php#how" onclick="closeNav()"><?= e($ui['nav']['how'] ?? "So funktioniert's") ?></a></li>
     <li><a href="../index.php#value" onclick="closeNav()"><?= e($ui['nav']['value'] ?? 'Ihr Nutzen') ?></a></li>
     <li><a href="../index.php#technik" onclick="closeNav()"><?= e($ui['nav']['technik'] ?? 'Technik') ?></a></li>
-    <li><a href="news.php" onclick="closeNav()"><?= e($ui['nav']['news'] ?? 'News') ?></a></li>
+    <li><a href="/news" onclick="closeNav()"><?= e($ui['nav']['news'] ?? 'News') ?></a></li>
     <?= renderLangSwitcher() ?>
     <li><a href="kontakt.php" class="nav-cta"><?= e($ui['nav']['kontakt'] ?? 'Kontakt aufnehmen') ?></a></li>
   </ul>

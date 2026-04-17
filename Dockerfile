@@ -7,6 +7,12 @@ RUN a2enmod rewrite
 RUN apt-get update && apt-get install -y msmtp msmtp-mta && rm -rf /var/lib/apt/lists/* \
     && echo 'sendmail_path = "/usr/bin/msmtp -t"' > /usr/local/etc/php/conf.d/mail.ini
 
+# GD-Extension für Bildbearbeitung (Thumbnail-Generator im Admin)
+RUN apt-get update && apt-get install -y libjpeg62-turbo-dev libpng-dev libwebp-dev \
+    && docker-php-ext-configure gd --with-jpeg --with-webp \
+    && docker-php-ext-install -j$(nproc) gd \
+    && rm -rf /var/lib/apt/lists/*
+
 # PHP Upload-Limits erhöhen (für PDFs)
 RUN echo "upload_max_filesize = 20M\npost_max_size = 25M" > /usr/local/etc/php/conf.d/uploads.ini
 

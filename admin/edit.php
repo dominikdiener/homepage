@@ -15,6 +15,7 @@ $csrf    = getCsrfToken();
 $form = [
     'datum'             => $entry['datum']             ?? date('Y-m-d'),
     'ersteller'         => $entry['ersteller']         ?? '',
+    'kategorie'         => $entry['kategorie']         ?? 'news',
     'ueberschrift'      => $entry['ueberschrift']      ?? '',
     'unterueberschrift' => $entry['unterueberschrift'] ?? '',
     'langtext'          => $entry['langtext']          ?? '',
@@ -27,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     } else {
         $form['datum']             = trim($_POST['datum'] ?? '');
         $form['ersteller']         = trim($_POST['ersteller'] ?? '');
+        $form['kategorie']         = trim($_POST['kategorie'] ?? 'news');
         $form['ueberschrift']      = trim($_POST['ueberschrift'] ?? '');
         $form['unterueberschrift'] = trim($_POST['unterueberschrift'] ?? '');
         $form['langtext']          = trim($_POST['langtext'] ?? '');
@@ -36,39 +38,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         }
 
         if (!$error) {
-            $entries = loadNews();
-
-            if ($isEdit) {
-                foreach ($entries as &$e) {
-                    if ($e['nummer'] === $nr) {
-                        $e['datum']             = $form['datum'];
-                        $e['ersteller']         = $form['ersteller'];
-                        $e['ueberschrift']      = $form['ueberschrift'];
-                        $e['unterueberschrift'] = $form['unterueberschrift'];
-                        $e['langtext']          = $form['langtext'];
-                        break;
-                    }
-                }
-                unset($e);
-                flashMessage('Beitrag #' . $nr . ' aktualisiert.');
-            } else {
+            if (!$isEdit) {
                 $nr = (string) nextNummer();
-                $entries[] = [
-                    'nummer'            => $nr,
-                    'datum'             => $form['datum'],
-                    'ersteller'         => $form['ersteller'],
-                    'ueberschrift'      => $form['ueberschrift'],
-                    'unterueberschrift' => $form['unterueberschrift'],
-                    'langtext'          => $form['langtext'],
-                ];
-                // Ordner anlegen
                 $dir = NEWS_DIR . '/' . $nr;
                 if (!is_dir($dir)) mkdir($dir, 0755, true);
                 updateFilesJson($nr);
                 flashMessage('Beitrag #' . $nr . ' erstellt.');
+            } else {
+                flashMessage('Beitrag #' . $nr . ' aktualisiert.');
             }
 
-            saveNews($entries);
+            saveNewsEntry([
+                'nummer'            => $nr,
+                'datum'             => $form['datum'],
+                'ersteller'         => $form['ersteller'],
+                'kategorie'         => $form['kategorie'],
+                'ueberschrift'      => $form['ueberschrift'],
+                'unterueberschrift' => $form['unterueberschrift'],
+                'langtext'          => $form['langtext'],
+            ]);
+
             header('Location: edit.php?nr=' . urlencode($nr));
             exit;
         }
@@ -121,6 +110,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 
+/* ── POST: Vorschaubild hochladen ── */
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'upload_preview' && $isEdit) {
+    if (!verifyCsrf($_POST['csrf'] ?? '')) {
+        $error = 'Ungültige Anfrage.';
+    } else {
+        $type = in_array($_POST['preview_type'] ?? '', ['desktop', 'mobile']) ? $_POST['preview_type'] : '';
+        if (!$type) {
+            $error = 'Ungültiger Bildtyp.';
+        } elseif (empty($_FILES['preview_img']['name'])) {
+            $error = 'Keine Datei ausgewählt.';
+        } else {
+            $file = $_FILES['preview_img'];
+            $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+            if ($file['error'] !== UPLOAD_ERR_OK) {
+                $error = 'Fehler beim Upload.';
+            } elseif ($file['size'] > MAX_IMG_SIZE) {
+                $error = 'Datei zu groß (max. 5 MB).';
+            } elseif (!in_array($ext, ALLOWED_IMG_EXT)) {
+                $error = 'Nur JPG, PNG oder WebP erlaubt.';
+            } else {
+                $dir = NEWS_DIR . '/' . $nr;
+                if (!is_dir($dir)) mkdir($dir, 0755, true);
+                // Alte Vorschaubilder dieses Typs löschen
+                deletePreviewImage($nr, $type);
+                $filename = "preview-{$type}.{$ext}";
+                if (move_uploaded_file($file['tmp_name'], $dir . '/' . $filename)) {
+                    $label = $type === 'desktop' ? 'Desktop' : 'Mobile';
+                    flashMessage("Vorschaubild ({$label}) hochgeladen.");
+                    header('Location: edit.php?nr=' . urlencode($nr));
+                    exit;
+                } else {
+                    $error = 'Datei konnte nicht gespeichert werden.';
+                }
+            }
+        }
+    }
+}
+
+/* ── POST: Vorschaubild löschen ── */
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete_preview' && $isEdit) {
+    if (verifyCsrf($_POST['csrf'] ?? '')) {
+        $type = in_array($_POST['preview_type'] ?? '', ['desktop', 'mobile']) ? $_POST['preview_type'] : '';
+        if ($type) {
+            deletePreviewImage($nr, $type);
+            $label = $type === 'desktop' ? 'Desktop' : 'Mobile';
+            flashMessage("Vorschaubild ({$label}) gelöscht.");
+        }
+        header('Location: edit.php?nr=' . urlencode($nr));
+        exit;
+    }
+}
+
 $pdfs = $isEdit ? listPdfs($nr) : [];
 $flash = getFlash();
 ?>
@@ -131,6 +172,9 @@ $flash = getFlash();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $isEdit ? 'Bearbeiten #' . htmlspecialchars($nr) : 'Neuer Beitrag' ?> – Admin</title>
     <link rel="stylesheet" href="style.css">
+    <!-- EasyMDE (Markdown-Editor mit Werkzeugleiste) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde@2.18.0/dist/easymde.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/easymde@2.18.0/dist/easymde.min.js"></script>
 </head>
 <body>
 <div class="admin-wrap">
@@ -164,8 +208,26 @@ $flash = getFlash();
         <label for="ersteller">Ersteller</label>
         <input type="text" id="ersteller" name="ersteller" value="<?= htmlspecialchars($form['ersteller']) ?>">
 
-        <label for="langtext">Langtext</label>
-        <textarea id="langtext" name="langtext" rows="8"><?= htmlspecialchars($form['langtext']) ?></textarea>
+        <label for="kategorie">Kategorie</label>
+        <select id="kategorie" name="kategorie">
+            <?php
+            $cats = [
+                'news'              => 'News',
+                'kampagne'          => 'Kampagne',
+                'erfahrungsbericht' => 'Erfahrungsbericht',
+                'messe'             => 'Messe',
+            ];
+            $selectedCat = strtolower($form['kategorie']);
+            foreach ($cats as $val => $label):
+            ?>
+                <option value="<?= htmlspecialchars($val) ?>"<?= $selectedCat === $val ? ' selected' : '' ?>><?= htmlspecialchars($label) ?></option>
+            <?php endforeach; ?>
+        </select>
+
+        <label for="langtext">Langtext
+            <small style="font-weight:normal;color:#999;">(Markdown: **fett**, *kursiv*, - Aufzählung, [Link](url))</small>
+        </label>
+        <textarea id="langtext" name="langtext" rows="12"><?= htmlspecialchars($form['langtext']) ?></textarea>
 
         <div style="margin-top:1rem;display:flex;gap:.8rem;">
             <button type="submit" class="btn btn-primary"><?= $isEdit ? 'Speichern' : 'Erstellen' ?></button>
@@ -173,7 +235,90 @@ $flash = getFlash();
         </div>
     </form>
 
-    <?php if ($isEdit): ?>
+    <!-- EasyMDE auf das Langtext-Feld anwenden -->
+    <script>
+        (function () {
+            var textarea = document.getElementById('langtext');
+            if (!textarea || typeof EasyMDE === 'undefined') return;
+            var mde = new EasyMDE({
+                element: textarea,
+                spellChecker: false,
+                autoDownloadFontAwesome: true,
+                status: ['lines', 'words'],
+                minHeight: '240px',
+                toolbar: [
+                    'bold', 'italic', 'heading', '|',
+                    'quote', 'unordered-list', 'ordered-list', '|',
+                    'link', 'horizontal-rule', '|',
+                    'preview', 'side-by-side', 'fullscreen', '|',
+                    'guide'
+                ],
+            });
+            // Vor dem Absenden Wert zurück in die Textarea schreiben
+            textarea.form.addEventListener('submit', function () {
+                mde.codemirror.save();
+            });
+        })();
+    </script>
+
+    <?php if ($isEdit):
+        $previewDesktop = findPreviewImage($nr, 'desktop');
+        $previewMobile  = findPreviewImage($nr, 'mobile');
+    ?>
+    <!-- Vorschaubilder -->
+    <div style="background:#fff;padding:2rem;border-radius:8px;box-shadow:0 1px 6px rgba(0,0,0,.06);margin-bottom:2rem;">
+        <h2 style="margin-bottom:1rem;font-size:1.2rem;">Vorschaubilder</h2>
+        <p style="color:#666;font-size:.85rem;margin-bottom:1.5rem;">Optionale Vorschaubilder für die News-Seite. Desktop-Bild wird ab 768px angezeigt (statt PDF-Vorschau), Mobile-Bild darunter.</p>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+            <!-- Desktop -->
+            <div style="border:1px solid #e0e0e0;border-radius:8px;padding:1rem;">
+                <h3 style="font-size:.9rem;margin-bottom:.8rem;">🖥 Desktop (ab 768px)</h3>
+                <?php if ($previewDesktop): ?>
+                    <img src="../data/news/<?= htmlspecialchars($nr) ?>/<?= htmlspecialchars($previewDesktop) ?>" style="width:100%;border-radius:6px;margin-bottom:.8rem;" alt="Desktop-Vorschau">
+                    <form method="post" style="padding:0;box-shadow:none;background:none;">
+                        <input type="hidden" name="csrf" value="<?= $csrf ?>">
+                        <input type="hidden" name="action" value="delete_preview">
+                        <input type="hidden" name="preview_type" value="desktop">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Desktop-Vorschaubild löschen?')" style="padding:.3rem .6rem;font-size:.8rem;">Löschen</button>
+                    </form>
+                <?php else: ?>
+                    <div style="background:#f5f5f5;border-radius:6px;padding:2rem;text-align:center;color:#999;margin-bottom:.8rem;">Kein Bild</div>
+                    <form method="post" enctype="multipart/form-data" style="padding:0;box-shadow:none;background:none;">
+                        <input type="hidden" name="csrf" value="<?= $csrf ?>">
+                        <input type="hidden" name="action" value="upload_preview">
+                        <input type="hidden" name="preview_type" value="desktop">
+                        <input type="file" name="preview_img" accept=".jpg,.jpeg,.png,.webp" required style="font-size:.85rem;">
+                        <button type="submit" class="btn btn-primary" style="margin-top:.5rem;padding:.3rem .8rem;font-size:.8rem;">Hochladen</button>
+                    </form>
+                <?php endif; ?>
+            </div>
+
+            <!-- Mobile -->
+            <div style="border:1px solid #e0e0e0;border-radius:8px;padding:1rem;">
+                <h3 style="font-size:.9rem;margin-bottom:.8rem;">📱 Mobile (unter 768px)</h3>
+                <?php if ($previewMobile): ?>
+                    <img src="../data/news/<?= htmlspecialchars($nr) ?>/<?= htmlspecialchars($previewMobile) ?>" style="width:100%;border-radius:6px;margin-bottom:.8rem;" alt="Mobile-Vorschau">
+                    <form method="post" style="padding:0;box-shadow:none;background:none;">
+                        <input type="hidden" name="csrf" value="<?= $csrf ?>">
+                        <input type="hidden" name="action" value="delete_preview">
+                        <input type="hidden" name="preview_type" value="mobile">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Mobile-Vorschaubild löschen?')" style="padding:.3rem .6rem;font-size:.8rem;">Löschen</button>
+                    </form>
+                <?php else: ?>
+                    <div style="background:#f5f5f5;border-radius:6px;padding:2rem;text-align:center;color:#999;margin-bottom:.8rem;">Kein Bild</div>
+                    <form method="post" enctype="multipart/form-data" style="padding:0;box-shadow:none;background:none;">
+                        <input type="hidden" name="csrf" value="<?= $csrf ?>">
+                        <input type="hidden" name="action" value="upload_preview">
+                        <input type="hidden" name="preview_type" value="mobile">
+                        <input type="file" name="preview_img" accept=".jpg,.jpeg,.png,.webp" required style="font-size:.85rem;">
+                        <button type="submit" class="btn btn-primary" style="margin-top:.5rem;padding:.3rem .8rem;font-size:.8rem;">Hochladen</button>
+                    </form>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
     <!-- PDF-Verwaltung -->
     <div style="background:#fff;padding:2rem;border-radius:8px;box-shadow:0 1px 6px rgba(0,0,0,.06);">
         <h2 style="margin-bottom:1rem;font-size:1.2rem;">PDF-Dateien (Ordner: data/news/<?= htmlspecialchars($nr) ?>/)</h2>

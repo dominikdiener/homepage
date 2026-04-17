@@ -45,6 +45,7 @@ $csrf  = getCsrfToken();
         <a href="section-edit.php?section=datenschutz" class="admin-nav-item">Datenschutz</a>
         <a href="section-edit.php?section=ui" class="admin-nav-item">UI-Texte</a>
         <a href="section-edit.php?section=styling" class="admin-nav-item">Formatierung</a>
+        <a href="images.php" class="admin-nav-item">Bilder</a>
         <a href="languages.php" class="admin-nav-item">Sprachen</a>
         <a href="revision-manage.php" class="admin-nav-item">Versionen</a>
         <a href="hilfe.php" class="admin-nav-item" style="margin-left:auto;">❓ Hilfe</a>

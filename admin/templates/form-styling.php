@@ -66,12 +66,12 @@
         </div>
     </div>
 
-    <!-- Schriften -->
+    <!-- Schriftarten -->
     <div class="cb-section">
-        <div class="cb-header" onclick="toggleCbSection(this)">🔤 Schriften</div>
+        <div class="cb-header" onclick="toggleCbSection(this)">🔤 Schriftarten</div>
         <div class="cb-body" style="display:none;">
-            <div class="cb-item" data-selector="body" data-prop="font-family">
-                <span class="cb-label">Schriftart (Fließtext)</span>
+            <div class="cb-item" data-selector=":root" data-prop="--font-body" data-default="'DM Sans', sans-serif">
+                <span class="cb-label">Fließtext-Schrift</span>
                 <span class="cb-desc">Text, Beschreibungen, Navigation</span>
                 <select class="cb-select">
                     <option value="">Standard (DM Sans)</option>
@@ -84,9 +84,9 @@
                     <option value="Arial, sans-serif">Arial</option>
                 </select>
             </div>
-            <div class="cb-item" data-selector=".section-eyebrow, .hero-badge, .trust-bar, .how-step-tag, .how-step-num, .spec-value" data-prop="font-family">
-                <span class="cb-label">Schriftart (Labels/Badges)</span>
-                <span class="cb-desc">Badges, Nummern, techn. Werte (Space Mono)</span>
+            <div class="cb-item" data-selector=":root" data-prop="--font-mono" data-default="'Space Mono', monospace">
+                <span class="cb-label">Mono-Schrift (Labels/Badges)</span>
+                <span class="cb-desc">Badges, Nummern, techn. Werte</span>
                 <select class="cb-select">
                     <option value="">Standard (Space Mono)</option>
                     <option value="'JetBrains Mono', monospace">JetBrains Mono</option>
@@ -96,14 +96,6 @@
                     <option value="'Courier New', monospace">Courier New</option>
                     <option value="'DM Sans', sans-serif">DM Sans (wie Fließtext)</option>
                 </select>
-            </div>
-            <div class="cb-item" data-selector="body" data-prop="font-size">
-                <span class="cb-label">Schriftgröße (Basis)</span>
-                <span class="cb-desc">Standard: 16px</span>
-                <div class="cb-range-wrap">
-                    <input type="range" class="cb-range" min="12" max="22" value="16" step="1">
-                    <span class="cb-range-val">16px</span>
-                </div>
             </div>
             <div class="cb-item" data-selector=".hero h1, .section-title" data-prop="font-weight">
                 <span class="cb-label">Überschriften Dicke</span>
@@ -118,6 +110,141 @@
                     <option value="800">Extra Bold (800)</option>
                     <option value="900">Black (900)</option>
                 </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schriftgrößen -->
+    <div class="cb-section">
+        <div class="cb-header" onclick="toggleCbSection(this)">📏 Schriftgrößen</div>
+        <div class="cb-body" style="display:none;">
+            <div class="cb-item" data-selector=":root" data-prop="--fs-nav" data-default="13px">
+                <span class="cb-label">Navigation</span>
+                <span class="cb-desc">Menü-Links (Standard: 13px)</span>
+                <div class="cb-range-wrap">
+                    <input type="range" class="cb-range" min="10" max="20" value="13" step="1">
+                    <span class="cb-range-val">13px</span>
+                </div>
+            </div>
+            <div class="cb-item" data-selector=":root" data-prop="--fs-hero-sub" data-default="18px">
+                <span class="cb-label">Hero Untertitel</span>
+                <span class="cb-desc">Text unter der Hauptüberschrift (Standard: 18px)</span>
+                <div class="cb-range-wrap">
+                    <input type="range" class="cb-range" min="14" max="26" value="18" step="1">
+                    <span class="cb-range-val">18px</span>
+                </div>
+            </div>
+            <div class="cb-item" data-selector=":root" data-prop="--fs-section-sub" data-default="18px">
+                <span class="cb-label">Sektions-Untertitel</span>
+                <span class="cb-desc">Beschreibungstext unter Sektionstiteln (Standard: 18px)</span>
+                <div class="cb-range-wrap">
+                    <input type="range" class="cb-range" min="14" max="26" value="18" step="1">
+                    <span class="cb-range-val">18px</span>
+                </div>
+            </div>
+            <div class="cb-item" data-selector=":root" data-prop="--fs-eyebrow" data-default="11px">
+                <span class="cb-label">Eyebrow / Badge</span>
+                <span class="cb-desc">Kleine Labels über Überschriften (Standard: 11px)</span>
+                <div class="cb-range-wrap">
+                    <input type="range" class="cb-range" min="8" max="16" value="11" step="1">
+                    <span class="cb-range-val">11px</span>
+                </div>
+            </div>
+            <div class="cb-item" data-selector=":root" data-prop="--fs-card-title" data-default="20px">
+                <span class="cb-label">Karten-Titel</span>
+                <span class="cb-desc">Überschriften in Karten (Standard: 20px)</span>
+                <div class="cb-range-wrap">
+                    <input type="range" class="cb-range" min="14" max="30" value="20" step="1">
+                    <span class="cb-range-val">20px</span>
+                </div>
+            </div>
+            <div class="cb-item" data-selector=":root" data-prop="--fs-card-text" data-default="15px">
+                <span class="cb-label">Karten-Text</span>
+                <span class="cb-desc">Fließtext in Karten (Standard: 15px)</span>
+                <div class="cb-range-wrap">
+                    <input type="range" class="cb-range" min="12" max="22" value="15" step="1">
+                    <span class="cb-range-val">15px</span>
+                </div>
+            </div>
+            <div class="cb-item" data-selector=":root" data-prop="--fs-btn" data-default="15px">
+                <span class="cb-label">Buttons</span>
+                <span class="cb-desc">Schriftgröße in Buttons (Standard: 15px)</span>
+                <div class="cb-range-wrap">
+                    <input type="range" class="cb-range" min="12" max="22" value="15" step="1">
+                    <span class="cb-range-val">15px</span>
+                </div>
+            </div>
+            <div class="cb-item" data-selector=":root" data-prop="--fs-spec-value" data-default="26px">
+                <span class="cb-label">Techn. Daten Werte</span>
+                <span class="cb-desc">Große Zahlenwerte in Specs (Standard: 26px)</span>
+                <div class="cb-range-wrap">
+                    <input type="range" class="cb-range" min="18" max="40" value="26" step="1">
+                    <span class="cb-range-val">26px</span>
+                </div>
+            </div>
+            <div class="cb-item" data-selector=":root" data-prop="--fs-spec-label" data-default="13px">
+                <span class="cb-label">Techn. Daten Label</span>
+                <span class="cb-desc">Beschriftung unter Spec-Werten (Standard: 13px)</span>
+                <div class="cb-range-wrap">
+                    <input type="range" class="cb-range" min="10" max="18" value="13" step="1">
+                    <span class="cb-range-val">13px</span>
+                </div>
+            </div>
+            <div class="cb-item" data-selector=":root" data-prop="--fs-label" data-default="10px">
+                <span class="cb-label">Kleine Labels</span>
+                <span class="cb-desc">Legende, Badges, Tags (Standard: 10px)</span>
+                <div class="cb-range-wrap">
+                    <input type="range" class="cb-range" min="8" max="16" value="10" step="1">
+                    <span class="cb-range-val">10px</span>
+                </div>
+            </div>
+            <div class="cb-item" data-selector=":root" data-prop="--fs-footer" data-default="13px">
+                <span class="cb-label">Footer</span>
+                <span class="cb-desc">Footer-Links (Standard: 13px)</span>
+                <div class="cb-range-wrap">
+                    <input type="range" class="cb-range" min="10" max="18" value="13" step="1">
+                    <span class="cb-range-val">13px</span>
+                </div>
+            </div>
+            <div class="cb-item" data-selector=":root" data-prop="--fs-footer-meta" data-default="12px">
+                <span class="cb-label">Footer Meta</span>
+                <span class="cb-desc">Copyright, Kleingedrucktes (Standard: 12px)</span>
+                <div class="cb-range-wrap">
+                    <input type="range" class="cb-range" min="8" max="16" value="12" step="1">
+                    <span class="cb-range-val">12px</span>
+                </div>
+            </div>
+            <div class="cb-item" data-selector=":root" data-prop="--fs-page-heading" data-default="22px">
+                <span class="cb-label">Seiten-Überschrift</span>
+                <span class="cb-desc">Unterseiten wie Impressum, Datenschutz (Standard: 22px)</span>
+                <div class="cb-range-wrap">
+                    <input type="range" class="cb-range" min="16" max="32" value="22" step="1">
+                    <span class="cb-range-val">22px</span>
+                </div>
+            </div>
+            <div class="cb-item" data-selector=":root" data-prop="--fs-page-text" data-default="16px">
+                <span class="cb-label">Seiten-Text</span>
+                <span class="cb-desc">Fließtext auf Unterseiten (Standard: 16px)</span>
+                <div class="cb-range-wrap">
+                    <input type="range" class="cb-range" min="12" max="22" value="16" step="1">
+                    <span class="cb-range-val">16px</span>
+                </div>
+            </div>
+            <div class="cb-item" data-selector=":root" data-prop="--fs-form-label" data-default="12px">
+                <span class="cb-label">Formular-Label</span>
+                <span class="cb-desc">Labels über Formularfeldern (Standard: 12px)</span>
+                <div class="cb-range-wrap">
+                    <input type="range" class="cb-range" min="10" max="18" value="12" step="1">
+                    <span class="cb-range-val">12px</span>
+                </div>
+            </div>
+            <div class="cb-item" data-selector=":root" data-prop="--fs-form-input" data-default="15px">
+                <span class="cb-label">Formular-Eingabe</span>
+                <span class="cb-desc">Text in Eingabefeldern (Standard: 15px)</span>
+                <div class="cb-range-wrap">
+                    <input type="range" class="cb-range" min="12" max="22" value="15" step="1">
+                    <span class="cb-range-val">15px</span>
+                </div>
             </div>
         </div>
     </div>
@@ -151,12 +278,12 @@
     <div class="cb-section">
         <div class="cb-header" onclick="toggleCbSection(this)">🏠 Hero-Bereich</div>
         <div class="cb-body" style="display:none;">
-            <div class="cb-item" data-selector=".hero h1" data-prop="font-size">
-                <span class="cb-label">Überschrift Größe</span>
-                <span class="cb-desc">Standard: 56px</span>
+            <div class="cb-item" data-selector=":root" data-prop="--fs-hero-title" data-default="clamp(36px, 4.5vw, 60px)">
+                <span class="cb-label">Überschrift Größe (max)</span>
+                <span class="cb-desc">Standard: 60px (skaliert responsiv)</span>
                 <div class="cb-range-wrap">
-                    <input type="range" class="cb-range" min="32" max="80" value="56" step="2">
-                    <span class="cb-range-val">56px</span>
+                    <input type="range" class="cb-range" min="32" max="80" value="60" step="2" data-template="clamp(36px, 4.5vw, {val}px)">
+                    <span class="cb-range-val">60px</span>
                 </div>
             </div>
             <div class="cb-item" data-selector=".hero h1 span" data-prop="color">
@@ -371,8 +498,16 @@ document.addEventListener('DOMContentLoaded', function() {
         if (rangeInput) {
             var rangeVal = item.querySelector('.cb-range-val');
             rangeInput.addEventListener('input', function() {
-                rangeVal.textContent = this.value + 'px';
-                insertOrUpdateRule(selector, prop, this.value + 'px');
+                var template = this.dataset.template;
+                var val;
+                if (template) {
+                    val = template.replace('{val}', this.value);
+                    rangeVal.textContent = this.value + 'px';
+                } else {
+                    val = this.value + 'px';
+                    rangeVal.textContent = val;
+                }
+                insertOrUpdateRule(selector, prop, val);
             });
         }
 
